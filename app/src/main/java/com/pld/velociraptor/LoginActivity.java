@@ -3,6 +3,7 @@ package com.pld.velociraptor;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -139,11 +140,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
+     * This method is called on button pressed...
+     *
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+
         if (mAuthTask != null) {
             return;
         }
@@ -159,6 +163,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
+        //For now we do not interpret the data entered, and forward to the applications main (velociraptor) activity
+        /*
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
@@ -188,6 +194,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
+        */
+
+        Intent velociraptor = new Intent(getApplicationContext(), VelociraptorActivity.class);
+        Bundle b = new Bundle();
+        b.putString("username", "Maxou");
+        velociraptor.putExtras(b);
+        startActivity(velociraptor);
+        finish();
     }
 
     private boolean isEmailValid(String email) {
