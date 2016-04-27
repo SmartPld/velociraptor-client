@@ -32,7 +32,6 @@ public class UserService {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void loadUserProfile(UserLoadedCallBack callback, String token)  {
 
-
         LoadUserAsyncTask asyncLoader = new LoadUserAsyncTask(restClient, context, callback);
 
         String[] params = {token};
