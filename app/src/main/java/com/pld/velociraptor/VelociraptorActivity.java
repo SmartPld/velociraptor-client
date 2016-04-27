@@ -16,10 +16,14 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pld.velociraptor.communication.ProfileMockInteraction;
+import com.pld.velociraptor.model.UserProfile;
+
 public class VelociraptorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private String username;
+    private String sessionToken;
+    private UserProfile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +32,10 @@ public class VelociraptorActivity extends AppCompatActivity
 
         //customize view
         Bundle b = getIntent().getExtras();
-        this.username = b.getString("username");
+        this.sessionToken = b.getString("sessionToken");
+
+        //TODO: Use Spinner+AsyncTask to load profile...
+        profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,10 +76,10 @@ public class VelociraptorActivity extends AppCompatActivity
 
         //Customize view according to user profile
         TextView nameView = (TextView) findViewById(R.id.userNameTextView);
-        nameView.setText(username);
+        nameView.setText(profile.getUsername());
 
         TextView mailView = (TextView) findViewById(R.id.userMailTextView);
-        mailView.setText(username.toLowerCase() + "@velociraptor.fr");
+        mailView.setText(profile.getEmail());
 
         return true;
     }

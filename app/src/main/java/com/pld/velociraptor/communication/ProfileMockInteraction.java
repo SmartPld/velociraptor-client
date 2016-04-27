@@ -13,18 +13,31 @@ import java.math.BigInteger;
  */
 public class ProfileMockInteraction implements ProfileInteraction {
 
+    //mock is implemented as singleton (will become obsulete using DI)
+    //TODO: Use DI
+    private static ProfileMockInteraction singletonReference = null;
+
+    //maps usermails (=ids) to passwords
     private Map<String, String> mockUserCredentials = new LinkedHashMap<>();
+
+    //maps tokens to usermails ( = ids)
     private Map<String, String> mockTokens = new LinkedHashMap<>();
 
-    public ProfileMockInteraction() {
+    private ProfileMockInteraction() {
+        mockUserCredentials.put("maxou@velociraptor.fr", "42");
+        mockUserCredentials.put("thomas@velociraptor.fr", "42");
+        mockUserCredentials.put("kilian@velociraptor.fr", "42");
+        mockUserCredentials.put("guillaume@velociraptor.fr", "42");
+        mockUserCredentials.put("mathieu@velociraptor.fr", "42");
+        mockUserCredentials.put("thibault@velociraptor.fr", "42");
+    }
 
-        mockUserCredentials.put("Maxou", "42");
-        mockUserCredentials.put("Thomas", "41");
-        mockUserCredentials.put("Kilian", "40");
-        mockUserCredentials.put("Guillaume", "39");
-        mockUserCredentials.put("Mathieu", "38");
-        mockUserCredentials.put("Thibault", "37");
-
+    //TODO: remove once DI is set up
+    public static ProfileMockInteraction getInstance()
+    {
+        if(singletonReference == null)
+            singletonReference = new ProfileMockInteraction();
+        return singletonReference;
     }
 
     @Override
@@ -58,7 +71,8 @@ public class ProfileMockInteraction implements ProfileInteraction {
             return null;
         }
 
-        UserProfile mockProfile = new UserProfile("mock@email.fr", mockTokens.get(sessionToken), 42, 42, 42);
+        //creating a mock profile...
+        UserProfile mockProfile = new UserProfile(mockTokens.get(sessionToken), mockTokens.get(sessionToken).split("@")[0], 100, 420, 42);
         return mockProfile;
     }
 
