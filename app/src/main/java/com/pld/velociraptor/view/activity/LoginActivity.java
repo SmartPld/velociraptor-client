@@ -1,24 +1,21 @@
-package com.pld.velociraptor;
+package com.pld.velociraptor.view.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,6 +26,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.pld.velociraptor.R;
+import com.pld.velociraptor.communication.ProfileInteraction;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,13 +55,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    //private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    //TODO: pass appropriate implementation using DI
+    private ProfileInteraction  profileInteraction ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,9 +151,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private void attemptLogin() {
 
+        /*
         if (mAuthTask != null) {
             return;
-        }
+        }*/
 
         // Reset errors.
         mEmailView.setError(null);
@@ -163,8 +167,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        //For now we do not interpret the data entered, and forward to the applications main (velociraptor) activity
-        /*
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
@@ -172,7 +174,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check for a valid email address. (Syntax check)
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
@@ -183,6 +185,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
+        //Finally perform a semantic check using the ProfileInteraction
+        String sessionToken  = profileInteraction.getUserToken(email, password);
+        if(sessionToken.startsWith("ERROR"))
+        {
+            mEmailView.setError(sessionToken);
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -191,27 +204,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
-        */
+            //mAuthTask = new UserLoginTask(email, password);
+            //mAuthTask.execute((Void) null);
 
-        Intent velociraptor = new Intent(getApplicationContext(), VelociraptorActivity.class);
-        Bundle b = new Bundle();
-        b.putString("username", "Maxou");
-        velociraptor.putExtras(b);
-        startActivity(velociraptor);
-        finish();
+            //goes some place here...
+            Intent velociraptor = new Intent(getApplicationContext(), VelociraptorActivity.class);
+            Bundle b = new Bundle();
+            b.putString("sessionToken", sessionToken);
+            velociraptor.putExtras(b);
+            startActivity(velociraptor);
+            finish();
+        }
+
+
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() >= 2;
     }
 
     /**
@@ -308,6 +321,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    /*
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -360,5 +374,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+    */
 }
 

@@ -1,4 +1,4 @@
-package com.pld.velociraptor;
+package com.pld.velociraptor.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,20 +15,40 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.pld.velociraptor.R;
+import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.service.UserLoadedCallBack;
+import com.pld.velociraptor.service.UserService;
+import com.pld.velociraptor.view.activity.LoginActivity;
+import com.pld.velociraptor.model.UserProfile;
+
+import javax.inject.Inject;
+
 
 public class VelociraptorActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, UserLoadedCallBack {
 
-    private String username;
+    private String sessionToken;
+    private UserProfile profile;
+
+    @Inject
+    UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_velociraptor);
 
+        ((VelociraptorApplication)this.getApplication()).getAppComponent().inject(this); //here injection
+
         //customize view
         Bundle b = getIntent().getExtras();
-        this.username = b.getString("username");
+        this.sessionToken = b.getString("sessionToken");
+
+        //TODO: Use Spinner+AsyncTask to load profile...
+       // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
+
+        userService.loadUserProfile(this, sessionToken);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,10 +89,10 @@ public class VelociraptorActivity extends AppCompatActivity
 
         //Customize view according to user profile
         TextView nameView = (TextView) findViewById(R.id.userNameTextView);
-        nameView.setText(username);
+        nameView.setText(profile.getUsername());
 
         TextView mailView = (TextView) findViewById(R.id.userMailTextView);
-        mailView.setText(username.toLowerCase() + "@velociraptor.fr");
+        mailView.setText(profile.getEmail());
 
         return true;
     }
@@ -116,5 +136,10 @@ public class VelociraptorActivity extends AppCompatActivity
         //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         //drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onUserLoaded(UserProfile userProfile) {
+        this.profile = userProfile;
     }
 }

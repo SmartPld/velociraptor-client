@@ -1,31 +1,40 @@
-package com.pld.velociraptor.communication;
+package com.pld.velociraptor.service;
 
 import com.pld.velociraptor.model.UserProfile;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import java.security.SecureRandom;
-import java.math.BigInteger;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by schieder on 4/26/16.
  */
-public class ProfileMockInteraction implements ProfileInteraction {
+@Singleton
+public class UserServiceMockImpl implements UserServiceApi {
 
+    //mock is implemented as singleton (will become obsulete using DI)
+
+    //maps usermails (=ids) to passwords
     private Map<String, String> mockUserCredentials = new LinkedHashMap<>();
-    private Map<String, String> mockTokens = new LinkedHashMap<>();
 
-    public ProfileMockInteraction() {
-
-        mockUserCredentials.put("Maxou", "42");
-        mockUserCredentials.put("Thomas", "41");
-        mockUserCredentials.put("Kilian", "40");
-        mockUserCredentials.put("Guillaume", "39");
-        mockUserCredentials.put("Mathieu", "38");
-        mockUserCredentials.put("Thibault", "37");
+    @Inject
+    public UserServiceMockImpl() {
+        mockUserCredentials.put("maxou@velociraptor.fr", "42");
+        mockUserCredentials.put("thomas@velociraptor.fr", "42");
+        mockUserCredentials.put("kilian@velociraptor.fr", "42");
+        mockUserCredentials.put("guillaume@velociraptor.fr", "42");
+        mockUserCredentials.put("mathieu@velociraptor.fr", "42");
+        mockUserCredentials.put("thibault@velociraptor.fr", "42");
 
     }
+
+    //maps tokens to usermails ( = ids)
+    private Map<String, String> mockTokens = new LinkedHashMap<>();
+
 
     @Override
     public String getUserToken(String usermail, String password) {
@@ -58,7 +67,8 @@ public class ProfileMockInteraction implements ProfileInteraction {
             return null;
         }
 
-        UserProfile mockProfile = new UserProfile("mock@email.fr", mockTokens.get(sessionToken), 42, 42, 42);
+        //creating a mock profile...
+        UserProfile mockProfile = new UserProfile(mockTokens.get(sessionToken), mockTokens.get(sessionToken).split("@")[0], 100, 420, 42);
         return mockProfile;
     }
 

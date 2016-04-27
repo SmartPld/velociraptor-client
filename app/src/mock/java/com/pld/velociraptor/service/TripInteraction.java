@@ -1,4 +1,4 @@
-package com.pld.velociraptor.communication;
+package com.pld.velociraptor.service;
 
 /**
  *
