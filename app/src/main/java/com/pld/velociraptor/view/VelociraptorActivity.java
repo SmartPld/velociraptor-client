@@ -1,4 +1,4 @@
-package com.pld.velociraptor;
+package com.pld.velociraptor.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.pld.velociraptor.R;
+import com.pld.velociraptor.view.activity.LoginActivity;
 
 public class VelociraptorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

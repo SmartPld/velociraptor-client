@@ -1,22 +1,27 @@
-package com.pld.velociraptor.communication;
+package com.pld.velociraptor.service;
 
 import com.pld.velociraptor.model.UserProfile;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import java.security.SecureRandom;
-import java.math.BigInteger;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by schieder on 4/26/16.
  */
-public class ProfileMockInteraction implements ProfileInteraction {
+@Singleton
+public class UserServiceMockImpl implements UserServiceApi {
 
     private Map<String, String> mockUserCredentials = new LinkedHashMap<>();
     private Map<String, String> mockTokens = new LinkedHashMap<>();
 
-    public ProfileMockInteraction() {
+
+    @Inject
+    public UserServiceMockImpl() {
 
         mockUserCredentials.put("Maxou", "42");
         mockUserCredentials.put("Thomas", "41");
