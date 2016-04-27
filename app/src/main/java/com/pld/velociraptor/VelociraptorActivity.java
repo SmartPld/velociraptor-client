@@ -100,19 +100,10 @@ public class VelociraptorActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_bikes) {
-            Toast.makeText(this, "La quantité des trajets réalisés",
-                    Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_distance) {
-            Toast.makeText(this, "La distance totale effectuée",
-                    Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_average) {
-            Toast.makeText(this, "Votre vitesse moyenne",
+            Toast.makeText(this, "La quantité de trajets réalisés",
                     Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_cash) {
             Toast.makeText(this, "La totalité des remboursements obtenus",
-                    Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_rank) {
-            Toast.makeText(this, "Votre placement parmi tout les utilisateurs",
                     Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_disconnect) {
 
