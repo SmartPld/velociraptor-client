@@ -2,6 +2,7 @@ package com.pld.velociraptor.config;
 
 
 
+import com.pld.velociraptor.view.activity.LoginActivity;
 import com.pld.velociraptor.view.activity.VelociraptorActivity;
 
 import javax.inject.Singleton;
@@ -16,4 +17,6 @@ import dagger.Component;
 public interface AppComponent {
 
     void inject(VelociraptorActivity velociraptorActivity); //just for example
+
+    void inject(LoginActivity loginActivity);
 }

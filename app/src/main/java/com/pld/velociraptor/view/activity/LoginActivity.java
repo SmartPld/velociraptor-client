@@ -26,12 +26,15 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.pld.velociraptor.R;
-import com.pld.velociraptor.communication.ProfileInteraction;
 
+import com.pld.velociraptor.R;
+import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -63,13 +66,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
-    //TODO: pass appropriate implementation using DI
-    private ProfileInteraction  profileInteraction ;
+    @Inject
+    protected UserService profileInteraction ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        ((VelociraptorApplication)this.getApplication()).getAppComponent().inject(this); //here injection
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();

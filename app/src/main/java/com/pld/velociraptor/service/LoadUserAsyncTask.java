@@ -2,15 +2,11 @@ package com.pld.velociraptor.service;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.RestClient;
 
-
-import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 /**
  * Created by a607937 on 09/06/2015.

@@ -4,32 +4,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_bikes"
-            android:icon="@drawable/bike"
+            android:icon="@drawable/ic_directions_bike_24dp"
             android:title="105" />
         <item
             android:id="@+id/nav_distance"
-            android:icon="@drawable/distance"
+            android:icon="@drawable/ic_directions_bike_24dp"
             android:title="897 km" />
-        <item
-            android:id="@+id/nav_average"
-            android:icon="@drawable/average"
-            android:title="21.3 km/h" />
+
         <item
             android:id="@+id/nav_cash"
-            android:icon="@drawable/cash"
+            android:icon="@drawable/ic_attach_money_24dp"
             android:title="42,02" />
-        <item
-            android:id="@+id/nav_rank"
-            android:icon="@drawable/rank"
-            android:title="204 / 3029" />
-
     </group>
 
     <item android:title="Compte">
         <menu>
             <item
                 android:id="@+id/nav_disconnect"
-                android:icon="@drawable/disconnect"
+                android:icon="@drawable/ic_logout_24dp"
                 android:title="Déconnexion" />
         </menu>
     </item>

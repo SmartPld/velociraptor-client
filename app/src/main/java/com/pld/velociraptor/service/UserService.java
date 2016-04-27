@@ -5,10 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 
-
 import com.pld.velociraptor.tools.RestClient;
-
-import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,11 +18,21 @@ public class UserService {
 
     @Inject
     protected RestClient restClient;
+
     @Inject
     protected Context context;
 
     @Inject
+    UserServiceApi userServiceApi;
+
+    @Inject
     public UserService() {
+
+    }
+
+    public String getUserToken(String usermail, String password)
+    {
+        return userServiceApi.getUserToken(usermail, password);
 
     }
 
@@ -43,7 +50,12 @@ public class UserService {
             asyncLoader.execute(params);
         }
 
+    }
 
+    public void logout(String sessionToken)
+    {
+        //TODO... delegate
+        userServiceApi.logout(sessionToken);
     }
 
 }
