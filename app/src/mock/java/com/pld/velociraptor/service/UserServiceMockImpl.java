@@ -1,44 +1,40 @@
-package com.pld.velociraptor.communication;
+package com.pld.velociraptor.service;
 
 import com.pld.velociraptor.model.UserProfile;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import java.security.SecureRandom;
-import java.math.BigInteger;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by schieder on 4/26/16.
  */
-public class ProfileMockInteraction implements ProfileInteraction {
+@Singleton
+public class UserServiceMockImpl implements UserServiceApi {
 
     //mock is implemented as singleton (will become obsulete using DI)
-    //TODO: Use DI
-    private static ProfileMockInteraction singletonReference = null;
 
     //maps usermails (=ids) to passwords
     private Map<String, String> mockUserCredentials = new LinkedHashMap<>();
 
-    //maps tokens to usermails ( = ids)
-    private Map<String, String> mockTokens = new LinkedHashMap<>();
-
-    private ProfileMockInteraction() {
+    @Inject
+    public UserServiceMockImpl() {
         mockUserCredentials.put("maxou@velociraptor.fr", "42");
         mockUserCredentials.put("thomas@velociraptor.fr", "42");
         mockUserCredentials.put("kilian@velociraptor.fr", "42");
         mockUserCredentials.put("guillaume@velociraptor.fr", "42");
         mockUserCredentials.put("mathieu@velociraptor.fr", "42");
         mockUserCredentials.put("thibault@velociraptor.fr", "42");
+
     }
 
-    //TODO: remove once DI is set up
-    public static ProfileMockInteraction getInstance()
-    {
-        if(singletonReference == null)
-            singletonReference = new ProfileMockInteraction();
-        return singletonReference;
-    }
+    //maps tokens to usermails ( = ids)
+    private Map<String, String> mockTokens = new LinkedHashMap<>();
+
 
     @Override
     public String getUserToken(String usermail, String password) {

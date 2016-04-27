@@ -25,7 +25,7 @@ android {
 
         }
         full {
-            applicationId "com.pld.velociraptor"
+            applicationId "com.pld.velociraptor.full"
 
         }
 

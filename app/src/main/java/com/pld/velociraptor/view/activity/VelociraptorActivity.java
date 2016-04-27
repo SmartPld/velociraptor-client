@@ -1,4 +1,4 @@
-package com.pld.velociraptor;
+package com.pld.velociraptor.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,31 +15,40 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.pld.velociraptor.communication.ProfileInteraction;
-import com.pld.velociraptor.communication.ProfileMockInteraction;
+import com.pld.velociraptor.R;
+import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.service.UserLoadedCallBack;
+import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.model.UserProfile;
 
+import javax.inject.Inject;
+
+
 public class VelociraptorActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, UserLoadedCallBack {
 
     private String sessionToken;
     private UserProfile profile;
 
-    //TODO: Inject
-    private ProfileInteraction profileInteraction = ProfileMockInteraction.getInstance();
+
+    @Inject
+    UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_velociraptor);
 
+        ((VelociraptorApplication)this.getApplication()).getAppComponent().inject(this); //here injection
+
         //customize view
         Bundle b = getIntent().getExtras();
         this.sessionToken = b.getString("sessionToken");
 
         //TODO: Use Spinner+AsyncTask to load profile...
-        profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
+       // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
+
+        userService.loadUserProfile(this, sessionToken);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -131,7 +140,7 @@ public class VelociraptorActivity extends AppCompatActivity
         } else if (id == R.id.nav_disconnect) {
 
             // logout
-            profileInteraction.logout(sessionToken);
+            userService.logout(sessionToken);
 
             // redirect to login activity
             Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -142,5 +151,10 @@ public class VelociraptorActivity extends AppCompatActivity
         //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         //drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onUserLoaded(UserProfile userProfile) {
+        this.profile = userProfile;
     }
 }
