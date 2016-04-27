@@ -28,5 +28,5 @@ public interface ProfileInteraction {
     /**
      * Tells the server to invalidate the session key
      */
-    public String logout(String sessionToken);
+    public void logout(String sessionToken);
 }

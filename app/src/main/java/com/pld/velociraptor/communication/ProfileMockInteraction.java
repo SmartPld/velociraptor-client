@@ -72,12 +72,12 @@ public class ProfileMockInteraction implements ProfileInteraction {
         }
 
         //creating a mock profile...
-        UserProfile mockProfile = new UserProfile(mockTokens.get(sessionToken), mockTokens.get(sessionToken).split("@")[0], 100, 420, 42);
+        UserProfile mockProfile = new UserProfile(mockTokens.get(sessionToken), mockTokens.get(sessionToken).split("@")[0], (int)(Math.random()*1000) , (int)(Math.random()*1000), (int)(Math.random()*1000));
         return mockProfile;
     }
 
     @Override
-    public String logout(String sessionToken) {
-        return null;
+    public void logout(String sessionToken) {
+        mockTokens.remove(sessionToken);
     }
 }

@@ -3,9 +3,8 @@ package com.pld.velociraptor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,9 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pld.velociraptor.communication.ProfileInteraction;
 import com.pld.velociraptor.communication.ProfileMockInteraction;
 import com.pld.velociraptor.model.UserProfile;
 
@@ -24,6 +25,9 @@ public class VelociraptorActivity extends AppCompatActivity
 
     private String sessionToken;
     private UserProfile profile;
+
+    //TODO: Inject
+    private ProfileInteraction profileInteraction = ProfileMockInteraction.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,15 @@ public class VelociraptorActivity extends AppCompatActivity
         TextView mailView = (TextView) findViewById(R.id.userMailTextView);
         mailView.setText(profile.getEmail());
 
+        //update details in slide in menu:
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        MenuItem bikeMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_bikes);
+        bikeMenuView.setTitle(Integer.toString(profile.getTripsTotal()));
+        MenuItem distanceMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_distance);
+        distanceMenuView.setTitle(Integer.toString(profile.getDistanceTotal()));
+        MenuItem pointsMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_cash);
+        pointsMenuView.setTitle(Integer.toString(profile.getPoints()));
+
         return true;
     }
 
@@ -112,18 +125,15 @@ public class VelociraptorActivity extends AppCompatActivity
         } else if (id == R.id.nav_distance) {
             Toast.makeText(this, "La distance totale effectuée",
                     Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_average) {
-            Toast.makeText(this, "Votre vitesse moyenne",
-                    Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_cash) {
             Toast.makeText(this, "La totalité des remboursements obtenus",
                     Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_rank) {
-            Toast.makeText(this, "Votre placement parmi tout les utilisateurs",
-                    Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_disconnect) {
 
-            // logout, redirect to login activity
+            // logout
+            profileInteraction.logout(sessionToken);
+
+            // redirect to login activity
             Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(loginIntent);
             finish();
