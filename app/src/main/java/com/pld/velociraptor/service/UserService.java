@@ -30,12 +30,12 @@ public class UserService {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void loadDayForecast(UserLoadedCallBack callback, Long cityId) throws ExecutionException, InterruptedException {
+    public void loadUserProfile(UserLoadedCallBack callback, String token)  {
 
 
         LoadUserAsyncTask asyncLoader = new LoadUserAsyncTask(restClient, context, callback);
 
-        Long[] params = {cityId};
+        String[] params = {token};
         int currentapiVersion = Build.VERSION.SDK_INT;
         //here we check the level api
         if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {

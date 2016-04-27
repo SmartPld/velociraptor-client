@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.VelociraptorActivity"
+            android:name=".view.activity.VelociraptorActivity"
             android:label="@string/title_activity_velociraptor"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

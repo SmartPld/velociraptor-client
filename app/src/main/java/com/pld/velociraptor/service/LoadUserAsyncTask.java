@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Created by a607937 on 09/06/2015.
  */
-public class LoadUserAsyncTask extends AsyncTask<Long, Void, UserProfile> {
+public class LoadUserAsyncTask extends AsyncTask<String, Void, UserProfile> {
 
-    public static final String TAG = "LoadForecastAsyncTask";
+    public static final String TAG = "LoadUserAsyncTask";
 
     protected RestClient client;
 
@@ -45,11 +45,11 @@ public class LoadUserAsyncTask extends AsyncTask<Long, Void, UserProfile> {
     }
 
     @Override
-    protected UserProfile doInBackground(Long... cityId) {
+    protected UserProfile doInBackground(String... token) {
 
        UserProfile result = null;
 
-            result = client.getUserProfile("here the token");
+            result = client.getUserProfile(token[0]);
 
 
         return result;

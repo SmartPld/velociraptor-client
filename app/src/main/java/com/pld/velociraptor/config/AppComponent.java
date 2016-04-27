@@ -2,7 +2,7 @@ package com.pld.velociraptor.config;
 
 
 
-import com.pld.velociraptor.view.VelociraptorActivity;
+import com.pld.velociraptor.view.activity.VelociraptorActivity;
 
 import javax.inject.Singleton;
 
