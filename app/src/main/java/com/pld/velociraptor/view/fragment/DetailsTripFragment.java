@@ -39,7 +39,6 @@ public class DetailsTripFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_LONG).show();
     }
 }
 
