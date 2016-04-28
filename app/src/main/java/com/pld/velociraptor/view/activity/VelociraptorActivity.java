@@ -20,6 +20,7 @@ import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.service.UserLoadedCallBack;
 import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.model.UserProfile;
+import com.pld.velociraptor.view.fragment.DisplayTripFragment;
 
 import javax.inject.Inject;
 
@@ -70,6 +71,20 @@ public class VelociraptorActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        DisplayTripFragment listFrag = (DisplayTripFragment) getSupportFragmentManager().findFragmentByTag(DisplayTripFragment.TAG);
+
+        if (listFrag == null) {
+            listFrag = DisplayTripFragment.newInstance();
+
+            // Add the fragment to the 'fragment_container' FrameLayout replace to avoid reinstancing overlaying fragments
+            /*getSupportFragmentManager().beginTransaction()
+                    .add(R.id.list_frag, listFrag, DisplayTripFragment.TAG)
+                    .commit();*/
+
+        }
+
     }
 
     @Override

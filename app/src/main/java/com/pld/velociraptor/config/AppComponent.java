@@ -4,6 +4,7 @@ package com.pld.velociraptor.config;
 
 import com.pld.velociraptor.view.activity.LoginActivity;
 import com.pld.velociraptor.view.activity.VelociraptorActivity;
+import com.pld.velociraptor.view.fragment.DisplayTripFragment;
 
 import javax.inject.Singleton;
 
@@ -19,4 +20,6 @@ public interface AppComponent {
     void inject(VelociraptorActivity velociraptorActivity); //just for example
 
     void inject(LoginActivity loginActivity);
+
+    void inject(DisplayTripFragment displayTripFragment);
 }
