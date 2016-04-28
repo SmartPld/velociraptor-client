@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,11 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.UserLoadedCallBack;
 import com.pld.velociraptor.service.UserService;
-import com.pld.velociraptor.model.UserProfile;
+import com.pld.velociraptor.view.fragment.DisplayTripFragment;
 
 import javax.inject.Inject;
 
@@ -57,8 +58,8 @@ public class VelociraptorActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = DetailsTripActivity.newIntent(VelociraptorActivity.this);
+                startActivity(intent);
             }
         });
 
@@ -68,8 +69,22 @@ public class VelociraptorActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_left);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        DisplayTripFragment listFrag = (DisplayTripFragment) getSupportFragmentManager().findFragmentByTag(DisplayTripFragment.TAG);
+
+        if (listFrag == null) {
+            listFrag = DisplayTripFragment.newInstance();
+
+            // Add the fragment to the 'fragment_container' FrameLayout replace to avoid reinstancing overlaying fragments
+            /*getSupportFragmentManager().beginTransaction()
+                    .add(R.id.list_frag, listFrag, DisplayTripFragment.TAG)
+                    .commit();*/
+
+        }
+
     }
 
     @Override
@@ -95,7 +110,7 @@ public class VelociraptorActivity extends AppCompatActivity
         mailView.setText(profile.getEmail());
 
         //update details in slide in menu:
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_left);
         MenuItem bikeMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_bikes);
         bikeMenuView.setTitle(Integer.toString(profile.getTripsTotal()));
         MenuItem distanceMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_distance);

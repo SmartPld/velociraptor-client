@@ -26,7 +26,6 @@ public class RestClient {
     @Inject
     protected UserServiceApi userService;
 
-
     @Inject
     protected Context context;
     @Inject
@@ -37,7 +36,7 @@ public class RestClient {
     public RestClient() {
     }
 
-    public UserServiceApi getForecastService() {
+    public UserServiceApi getUserService() {
         return userService;
     }
 

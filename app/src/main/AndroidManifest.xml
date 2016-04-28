@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:name=".VelociraptorApplication"
@@ -28,6 +29,16 @@
             android:name=".view.activity.VelociraptorActivity"
             android:label="@string/title_activity_velociraptor"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".view.activity.DetailsTripActivity"
+            android:label="@string/title_activity_details_trip"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBzXhUUOp2b-_7TTfKonONpL3AdcXyznMM"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>
