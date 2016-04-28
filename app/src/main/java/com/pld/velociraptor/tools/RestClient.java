@@ -5,7 +5,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 
+import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
+import com.pld.velociraptor.service.TripServiceApi;
 import com.pld.velociraptor.service.UserServiceApi;
 
 import java.io.IOException;
@@ -27,7 +29,11 @@ public class RestClient {
     protected UserServiceApi userService;
 
     @Inject
+    protected TripServiceApi tripServiceApi;
+
+    @Inject
     protected Context context;
+
     @Inject
     protected Properties properties;
 
@@ -62,5 +68,15 @@ public class RestClient {
         UserProfile user = this.userService.getUserProfile(sessionToken);
 
         return user;
+    }
+
+    /**
+     * gets the trips
+     * @return
+     */
+    public List<Trip> getTrips() {
+
+        List<Trip> trips = this.tripServiceApi.loadTrips();
+        return trips;
     }
 }

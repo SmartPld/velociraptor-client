@@ -51,7 +51,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
         Trip currentTrip = getItem(position);
 
         //update the textViews with the forecast informations
-        viewHolder.idStationStart.setText(currentTrip.getIdStationStart());
+        viewHolder.idStationStart.setText(currentTrip.getStation_start().getId());
 
         return convertView;
     }

@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,16 +28,21 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.service.MapServices;
 import com.pld.velociraptor.service.TripDrawnCallBack;
+import com.pld.velociraptor.service.TripLoadedCallback;
+import com.pld.velociraptor.service.TripService;
 import com.pld.velociraptor.view.fragment.DetailsTripFragment;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, TripDrawnCallBack {
+public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, TripDrawnCallBack, TripLoadedCallback {
 
     @BindView(R.id.fab_details)
     protected FloatingActionButton fab;
@@ -46,6 +52,9 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
 
     @Inject
     MapServices mapServices;
+
+    @Inject
+    TripService tripService;
 
     @BindView(R.id.app_bar_layout)
     AppBarLayout abl;
@@ -77,6 +86,8 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
         mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        tripService.loadTrips(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -177,5 +188,10 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     @Override
     public void onTripDrawn() {
 
+    }
+
+    @Override
+    public void onTripsLoaded(List<Trip> trips) {
+        Log.d("trips", "loaded");
     }
 }

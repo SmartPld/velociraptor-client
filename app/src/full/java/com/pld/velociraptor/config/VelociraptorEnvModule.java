@@ -22,4 +22,11 @@ public class VelociraptorEnvModule {
         return restAdapter.create(UserServiceApi.class);
     }
 
+    @Provides
+    @Singleton
+    TripServiceApi provideTripServiceApi(RestAdapter restAdapter) {
+
+        return restAdapter.create(TripServiceApi.class);
+    }
+
 }

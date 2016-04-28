@@ -1,0 +1,92 @@
+[
+  {
+    "station_start":{
+      "number":10063,
+      "name":"Perrin/Jean Jaurès",
+      "open":true,
+      "address":"face au n°9 rue Jean Jaures",
+      "address2":"None",
+      "commune":"VILLEURBANNE",
+      "nmarrond":63,
+      "bonus":false,
+      "pole":"quartier Grandclément",
+      "pos":{
+        "lat":45.7583893829182,
+        "lng":4.88561275425414
+      },
+      "gid":757,
+      "altitude":0,
+      "id":1042
+    },
+    "station_end":{
+      "number":10021,
+      "name":"GrandClément",
+      "open":true,
+      "address":"Place GrandClément",
+      "address2":"",
+      "commune":"VILLEURBANNE",
+      "nmarrond":21,
+      "bonus":false,
+      "pole":"centre quartier, futur arrêt C3, itinéraire cyclable",
+      "pos":{
+        "lat":45.759711693591,
+        "lng":4.88986361796216
+      },
+      "gid":758,
+      "altitude":0,
+      "id":1043
+    },
+    "validite_start":"2016-04-28T09:33:58.000Z",
+    "validite_end":"2016-04-28T09:33:58.000Z",
+    "max_number":8,
+    "distance":3,
+    "delta_elevation":15,
+    "points":99,
+    "id":1501
+  },
+  {
+    "station_start":{
+      "number":8038,
+      "name":"Albert Thomas / Villon",
+      "open":true,
+      "address":"cours Albert Thomas",
+      "address2":"angle rue Villon",
+      "commune":"Lyon 8 ème",
+      "nmarrond":38,
+      "bonus":false,
+      "pole":"bureaux, itinéraire cyclable",
+      "pos":{
+        "lat":45.7467702121095,
+        "lng":4.86728334680193
+      },
+      "gid":759,
+      "altitude":0,
+      "id":1044
+    },
+    "station_end":{
+      "number":7045,
+      "name":"Parc des Berges",
+      "open":true,
+      "address":"40 avenue Leclerc",
+      "address2":"None",
+      "commune":"Lyon 7 ème",
+      "nmarrond":45,
+      "bonus":false,
+      "pole":"Accès berges, parc, itinéraire cyclable",
+      "pos":{
+        "lat":45.7377520986814,
+        "lng":4.8244878801967
+      },
+      "gid":760,
+      "altitude":0,
+      "id":1045
+    },
+    "validite_start":"2016-04-28T09:33:58.000Z",
+    "validite_end":"2016-04-28T09:33:58.000Z",
+    "max_number":8,
+    "distance":14,
+    "delta_elevation":39,
+    "points":14,
+    "id":1502
+  }
+]
