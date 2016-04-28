@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.tools.RestClient;
 
 import javax.inject.Inject;
@@ -30,11 +31,11 @@ public class MapServices {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void drawTrip(TripDrawnCallBack callback, GoogleMap googleMap, String depart, String arrivee)  {
+    public void drawTrip(TripDrawnCallBack callback, GoogleMap googleMap, Trip trip)  {
 
         ItineraireAsyncTask asyncLoader = new ItineraireAsyncTask(restClient, context, callback, googleMap);
 
-        String[] params = {depart, arrivee};
+        Trip[] params = {trip};
         int currentapiVersion = Build.VERSION.SDK_INT;
         //here we check the level api
         if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
@@ -44,4 +45,6 @@ public class MapServices {
         }
 
     }
+
+
 }

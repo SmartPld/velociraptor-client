@@ -1,53 +1,50 @@
 package com.pld.velociraptor.view.activity;
 
+import android.Manifest;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.internal.MapLifecycleDelegate;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.service.MapServices;
 import com.pld.velociraptor.service.TripDrawnCallBack;
-import com.pld.velociraptor.service.TripLoadedCallback;
 import com.pld.velociraptor.service.TripService;
 import com.pld.velociraptor.view.fragment.DetailsTripFragment;
-
-import java.util.List;
+import com.pld.velociraptor.view.fragment.VeloMapFragment;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, TripDrawnCallBack, TripLoadedCallback {
+public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, TripDrawnCallBack {
+
+    private final static String KEY_TRIP = "key_trip";
+    private static final int LOCATION = 0;
 
     @BindView(R.id.fab_details)
     protected FloatingActionButton fab;
 
-   // protected MapView mapView2;
+    // protected MapView mapView2;
     protected MapFragment mapFragment;
 
     @Inject
@@ -59,13 +56,17 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     @BindView(R.id.app_bar_layout)
     AppBarLayout abl;
 
+    GoogleMap map;
 
-    public static Intent newIntent(Context context){
+    private Trip trip;
 
+
+    public static Intent newIntent(Context context, Trip trip) {
         Intent intent = new Intent(context, DetailsTripActivity.class);
-
+        intent.putExtra(KEY_TRIP, trip);
         return intent;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,19 +76,17 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
 
         ButterKnife.bind(this);
 
-        ((VelociraptorApplication)getApplication()).getAppComponent().inject(this);
+        ((VelociraptorApplication) getApplication()).getAppComponent().inject(this);
+
+        Intent intent = getIntent();
+        trip = intent.getParcelableExtra(KEY_TRIP);
 
         MapsInitializer.initialize(DetailsTripActivity.this);
-        //mapView2 = (MapView) findViewById(R.id.mapV);
-        //mapView2.onCreate(savedInstanceState);
-        //mapView2.getMapAsync(this);
 
-
-        mapFragment = (MapFragment) getFragmentManager()
+        mapFragment = (VeloMapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        tripService.loadTrips(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -95,30 +94,29 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        CollapsingToolbarLayout collapsingToolbar =
+        final CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        /**CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) abl.getLayoutParams();
-        AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
-        behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-            @Override
-            public boolean canDrag(AppBarLayout appBarLayout) {
-                return false;
-            }
-        });
-        params.setBehavior(behavior);*/
 
-        collapsingToolbar.setTitle("Detail");
+        collapsingToolbar.setTitleEnabled(false);
+        getSupportActionBar().setTitle("");
 
-        DetailsTripFragment detailsTripFragment = DetailsTripFragment.newInstance(new Bundle());
+        DetailsTripFragment detailsTripFragment = DetailsTripFragment.newInstance(new Bundle(), trip);
 
-       /** FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, detailsTripFragment)//TODO use tags
                 .commit();
-        //fab = (FloatingActionButton) findViewById(R.id.fab_details);*/
+
+        ((VeloMapFragment) getFragmentManager().findFragmentById(R.id.map))
+                .setListener(new VeloMapFragment.OnTouchListener() {
+                    @Override
+                    public void onTouch() {
+                        collapsingToolbar.requestDisallowInterceptTouchEvent(true);
+                    }
+                });
+
         fab.setOnClickListener(detailsTripFragment);
         fab.show();
-
 
 
     }
@@ -137,7 +135,7 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
 
         fab.animate().alpha(0.0f);
 
@@ -147,13 +145,37 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        Toast.makeText(this, "map ready", Toast.LENGTH_LONG).show();
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
-        googleMap.getUiSettings().setScrollGesturesEnabled(true);
-        googleMap.getUiSettings().setRotateGesturesEnabled(true);
-        googleMap.getUiSettings().setZoomGesturesEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mapServices.drawTrip(this, googleMap, "45.750000,4.850000", "45.750050,4.850000");
+        map = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION);
+            return;
+        }
+        map.setMyLocationEnabled(true);
+        GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(Location location) {
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                map.addMarker(new MarkerOptions().position(loc))
+                        .setTitle("Votre position");
+
+            }
+        };
+
+        map.setOnMyLocationChangeListener(myLocationChangeListener);
+        map.getUiSettings().setAllGesturesEnabled(true);
+        map.getUiSettings().setScrollGesturesEnabled(true);
+        map.getUiSettings().setRotateGesturesEnabled(true);
+        map.getUiSettings().setZoomGesturesEnabled(true);
+        map.getUiSettings().setMyLocationButtonEnabled(false);
+
+        if(trip != null){
+            mapServices.drawTrip(this, map, trip);
+        }
+
+
     }
 
     @Override
@@ -163,26 +185,38 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     }
     @Override
     protected void onPause() {
-
         super.onPause();
+        mapFragment.onPause();
     }
 
     @Override
     protected void onDestroy() {
-
+        try{
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.remove(mapFragment);
+            ft.commit();
+        }catch(Exception e){
+        }
         super.onDestroy();
+
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+        if(mapFragment!=null) {
+            mapFragment.onLowMemory();
+        }
 
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapFragment.onSaveInstanceState(outState);
+        if(mapFragment!=null) {
+            mapFragment.onSaveInstanceState(outState);
+        }
+
     }
 
     @Override
@@ -191,7 +225,21 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onTripsLoaded(List<Trip> trips) {
-        Log.d("trips", "loaded");
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION : {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED  && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+
+                }
+                return;
+            }
+
+        }
     }
+
+
 }

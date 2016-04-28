@@ -25,11 +25,8 @@ import butterknife.ButterKnife;
  */
 public class TripAdapter extends ArrayAdapter<Trip> {
 
-    private LayoutInflater inflater;
-
     public TripAdapter(Context context, Properties properties, List<Trip> trips) {
         super(context, -1, trips);
-
     }
 
     @Override
@@ -38,7 +35,7 @@ public class TripAdapter extends ArrayAdapter<Trip> {
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_trip, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_trip, parent, false);
 
             viewHolder = new ViewHolder(convertView);
 
@@ -51,7 +48,11 @@ public class TripAdapter extends ArrayAdapter<Trip> {
         Trip currentTrip = getItem(position);
 
         //update the textViews with the forecast informations
-        viewHolder.idStationStart.setText(currentTrip.getStation_start().getId());
+        viewHolder.depart.setText(currentTrip.getStation_start().getName());
+        viewHolder.arrivee.setText(currentTrip.getStation_end().getName());
+        viewHolder.prix.setText(""+currentTrip.getPoints()+" points ");
+        viewHolder.delta.setText(currentTrip.getDelta_elevation()+"m");
+        viewHolder.distance.setText(currentTrip.getDistance()+"m");
 
         return convertView;
     }
@@ -59,14 +60,24 @@ public class TripAdapter extends ArrayAdapter<Trip> {
 
     protected static class ViewHolder {
 
-        @BindView(R.id.description)
-        protected TextView idStationStart;
+        @BindView(R.id.depart)
+        protected TextView depart;
+
+        @BindView(R.id.arrivee)
+        protected TextView arrivee;
+
+        @BindView(R.id.price)
+        protected TextView prix;
+
+        @BindView(R.id.distance)
+        protected TextView distance;
+
+        @BindView(R.id.delta)
+        protected TextView delta;
 
         public ViewHolder(View view){
             ButterKnife.bind(this, view);
         }
-
-
 
     }
 

@@ -45,7 +45,7 @@ public class TripServiceMockImpl implements TripServiceApi {
 
 
     @Override
-    public List<Trip> loadTrips() {
+    public List<Trip> loadTrips(int nb) {
 
         List<Trip> result = new ArrayList<>();
         try {
@@ -70,4 +70,5 @@ public class TripServiceMockImpl implements TripServiceApi {
         Log.d("gson", "test");
         return result;
     }
+
 }

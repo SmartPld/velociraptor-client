@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class DisplayTripFragment extends BaseFragment implements AdapterView.OnItemClickListener,
         TripLoadedCallback, SwipeRefreshLayout.OnRefreshListener{
 
-    public static final String TAG = "DisplayForecastFragment";
+    public static final String TAG = "DisplayTripFragment";
 
     @Inject
     protected TripService tripService;
@@ -42,10 +42,13 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     private List<Trip> trips = new ArrayList<>(); //the forecasts list
     private TripAdapter tripAdapter; //the adapter for the listView
 
-    @BindView(R.id.listViewTrips) ListView listForecasts; //the view for the forecasts
-    @BindView(R.id.swipe_container_list) SwipeRefreshLayout swipeView; // the swipe to refresh view
+    @BindView(R.id.listViewTrips)
+    ListView listForecasts; //the view for the forecasts
 
-    private OnHeadlineSelectedListener mCallback;
+    @BindView(R.id.swipe_container_list)
+    SwipeRefreshLayout swipeView; // the swipe to refresh view
+
+    private OnTripSelectedListener mCallback;
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -87,7 +90,7 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnHeadlineSelectedListener) activity;
+            mCallback = (OnTripSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
@@ -148,7 +151,7 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     }
 
     // Container Activity must implement this interface
-    public interface OnHeadlineSelectedListener {
+    public interface OnTripSelectedListener {
         void onTripSelected(Trip selectedTrip, View v);
     }
 }

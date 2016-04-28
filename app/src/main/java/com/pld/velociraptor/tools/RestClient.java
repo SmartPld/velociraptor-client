@@ -76,7 +76,7 @@ public class RestClient {
      */
     public List<Trip> getTrips() {
 
-        List<Trip> trips = this.tripServiceApi.loadTrips();
+        List<Trip> trips = this.tripServiceApi.loadTrips(10);
         return trips;
     }
 }

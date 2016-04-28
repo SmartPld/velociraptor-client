@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-    <android.support.v4.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    >
 
 
         <LinearLayout
@@ -17,18 +16,185 @@
             android:layout_height="match_parent"
             android:padding="16dp">
 
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view_restaurant"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                tools:visibility ="visible"
-                card_view:cardUseCompatPadding="true"
-                android:layout_marginTop="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_gravity="center"
+                    card_view:cardUseCompatPadding="true"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardCornerRadius="4dp"
+                    >
+                        <RelativeLayout
 
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                           >
+
+                                <TextView
+                                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:text="@string/d_part"
+                                    android:layout_marginLeft="8dp"
+                                    android:id="@+id/textView2"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    tools:text="INSA Einstein"
+                                    android:id="@+id/depart_name"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_toEndOf="@+id/textView2" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    tools:text="20 avenue albert einstein"
+                                    android:id="@+id/depart_address"
+                                    android:layout_below="@+id/depart_name"
+                                    android:layout_alignStart="@+id/depart_name" />
+                        </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card_view_restaurant"
+                    android:layout_gravity="center"
+                    card_view:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardCornerRadius="4dp"
+                    >
+                        <RelativeLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            >
+
+                                <TextView
+                                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:text="@string/arriv_e"
+                                    android:layout_marginLeft="8dp"
+                                    android:id="@+id/textView8"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="2dp"
+                                    tools:text="INSA Einstein"
+                                    android:id="@+id/arrivee_name"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_toEndOf="@+id/textView8" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    tools:text="20 avenue albert einstein"
+                                    android:id="@+id/arrivee_address"
+                                    android:layout_below="@+id/arrivee_name"
+                                    android:layout_alignStart="@+id/arrivee_name" />
+                        </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card_viewli"
+                    android:layout_gravity="center"
+                    card_view:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardCornerRadius="4dp"
+                    >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:orientation="vertical">
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    >
+
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:textColor="@color/black"
+                                            android:layout_height="match_parent"
+                                            android:text="@string/informations"
+                                            style="@style/Base.TextAppearance.AppCompat.Body1"
+                                            android:gravity="bottom"
+                                            android:layout_marginLeft="8dp" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    >
+
+
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:id="@+id/imageView8"
+                                            android:src="@drawable/ic_attach_money_24dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:text="@string/informations"
+                                            android:gravity="bottom"
+                                            tools:text="Invitations"
+                                            android:layout_marginLeft="8dp" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    >
+
+
+                                </LinearLayout>
+
+                        </LinearLayout>
+
+
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card_view"
+                    card_view:cardUseCompatPadding="true"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardCornerRadius="4dp"></android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card_view_menu"
+
+                    android:layout_gravity="center"
+                    card_view:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardCornerRadius="4dp"></android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
 
 

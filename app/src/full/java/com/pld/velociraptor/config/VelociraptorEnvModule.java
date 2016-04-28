@@ -1,8 +1,8 @@
 package com.pld.velociraptor.config;
 
 
+import com.pld.velociraptor.service.TripServiceApi;
 import com.pld.velociraptor.service.UserServiceApi;
-
 import javax.inject.Singleton;
 
 import dagger.Module;

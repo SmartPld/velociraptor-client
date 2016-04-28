@@ -20,4 +20,8 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_details_trip">activity_details_trip</string>
+    <string name="d_part">Départ :</string>
+    <string name="arriv_e">Arrivée :</string>
+    <string name="informations">Informations :</string>
+    <string name="prix">Prix :</string>
 </resources>

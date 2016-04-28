@@ -11,6 +11,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.pld.velociraptor.model.Pos;
+import com.pld.velociraptor.model.Station;
+import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.tools.RestClient;
 
 import org.w3c.dom.Document;
@@ -27,7 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import retrofit.RestAdapter;
 
-public class ItineraireAsyncTask extends AsyncTask<String, Integer, Boolean> {
+public class ItineraireAsyncTask extends AsyncTask<Trip, Integer, Boolean> {
     private static final String TOAST_MSG = "Calcul de l'itinéraire en cours";
     private static final String TOAST_ERR_MAJ = "Impossible de trouver un itinéraire";
 
@@ -56,9 +59,16 @@ public class ItineraireAsyncTask extends AsyncTask<String, Integer, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(String... params) {
-        editDepart = params[0];
-        editArrivee = params[1];
+    protected Boolean doInBackground(Trip... params) {
+
+        Trip trip = params[0];
+
+        Pos depart = trip.getStation_start().getPos();
+        Pos arrivee = trip.getStation_end().getPos();
+
+
+        editDepart = depart.getLat()+","+depart.getLng();
+        editArrivee = arrivee.getLat()+","+arrivee.getLng();
 
         try {
             //Construction de l'url à appeler

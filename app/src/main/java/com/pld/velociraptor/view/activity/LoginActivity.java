@@ -157,6 +157,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private void attemptLogin() {
 
+
         /*
         if (mAuthTask != null) {
             return;

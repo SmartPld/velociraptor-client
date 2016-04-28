@@ -1,11 +1,14 @@
 package com.pld.velociraptor.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
  * Created by thomas on 28/04/2016.
  */
-public class Trip {
+public class Trip implements Parcelable{
 
     private Station station_start;
     private Station station_end;
@@ -28,6 +31,28 @@ public class Trip {
         this.points = points;
         this.ide = ide;
     }
+
+    protected Trip(Parcel in) {
+        station_start = in.readParcelable(Station.class.getClassLoader());
+        station_end = in.readParcelable(Station.class.getClassLoader());
+        max_number = in.readInt();
+        distance = in.readInt();
+        delta_elevation = in.readInt();
+        points = in.readInt();
+        ide = in.readInt();
+    }
+
+    public static final Creator<Trip> CREATOR = new Creator<Trip>() {
+        @Override
+        public Trip createFromParcel(Parcel in) {
+            return new Trip(in);
+        }
+
+        @Override
+        public Trip[] newArray(int size) {
+            return new Trip[size];
+        }
+    };
 
     public Station getStation_start() {
         return station_start;
@@ -99,5 +124,21 @@ public class Trip {
 
     public void setIde(int ide) {
         this.ide = ide;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(station_start, flags);
+        dest.writeParcelable(station_end, flags);
+        dest.writeInt(max_number);
+        dest.writeInt(distance);
+        dest.writeInt(delta_elevation);
+        dest.writeInt(points);
+        dest.writeInt(ide);
     }
 }

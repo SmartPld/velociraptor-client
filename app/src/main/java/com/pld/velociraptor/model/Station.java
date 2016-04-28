@@ -1,9 +1,12 @@
 package com.pld.velociraptor.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Thibault on 28/04/2016.
  */
-public class Station {
+public class Station implements Parcelable{
     private int number;
     private String name;
     private boolean open;
@@ -33,6 +36,57 @@ public class Station {
         this.altitude = altitude;
         this.id = id;
     }
+
+
+    protected Station(Parcel in) {
+        number = in.readInt();
+        name = in.readString();
+        open = in.readByte() != 0;
+        address = in.readString();
+        address2 = in.readString();
+        commune = in.readString();
+        nmarrond = in.readInt();
+        bonus = in.readByte() != 0;
+        pole = in.readString();
+        pos = in.readParcelable(Pos.class.getClassLoader());
+        grid = in.readInt();
+        altitude = in.readInt();
+        id = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(number);
+        dest.writeString(name);
+        dest.writeByte((byte) (open ? 1 : 0));
+        dest.writeString(address);
+        dest.writeString(address2);
+        dest.writeString(commune);
+        dest.writeInt(nmarrond);
+        dest.writeByte((byte) (bonus ? 1 : 0));
+        dest.writeString(pole);
+        dest.writeParcelable(pos, flags);
+        dest.writeInt(grid);
+        dest.writeInt(altitude);
+        dest.writeInt(id);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Station> CREATOR = new Creator<Station>() {
+        @Override
+        public Station createFromParcel(Parcel in) {
+            return new Station(in);
+        }
+
+        @Override
+        public Station[] newArray(int size) {
+            return new Station[size];
+        }
+    };
 
     public int getNumber() {
         return number;
@@ -137,35 +191,6 @@ public class Station {
     public void setId(int id) {
         this.id = id;
     }
-
-    public class Pos {
-        private double lat;
-        private double lng;
-
-        public Pos(double lat, double lng) {
-            this.lat = lat;
-            this.lng = lng;
-        }
-
-        public double getLat() {
-            return lat;
-        }
-
-        public void setLat(double lat) {
-            this.lat = lat;
-        }
-
-        public double getLng() {
-            return lng;
-        }
-
-        public void setLng(double lng) {
-            this.lng = lng;
-        }
-    }
-
-
-
 
 
 }
