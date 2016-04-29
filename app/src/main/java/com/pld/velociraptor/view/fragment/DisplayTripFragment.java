@@ -2,8 +2,8 @@ package com.pld.velociraptor.view.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,8 @@ import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.service.TripLoadedCallback;
 import com.pld.velociraptor.service.TripService;
+import com.pld.velociraptor.view.adapters.RecyclerTripAdapter;
+import com.pld.velociraptor.view.adapters.TripAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by thomas on 28/04/2016.
  */
 public class DisplayTripFragment extends BaseFragment implements AdapterView.OnItemClickListener,
-        TripLoadedCallback, SwipeRefreshLayout.OnRefreshListener{
+        TripLoadedCallback, SwipeRefreshLayout.OnRefreshListener, RecyclerTripAdapter.OnItemClickListener {
 
     public static final String TAG = "DisplayTripFragment";
 
@@ -63,9 +65,10 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
         trips.addAll(tripsLoaded);
 
 
-        List<Trip> displayedTrips = applyFilter(tripsLoaded);
-        tripAdapter = new TripAdapter(getActivity(), properties, displayedTrips);
+        List<Trip> displayedTrips = trips;
+        tripAdapter = new TripAdapter(getActivity(), properties,displayedTrips);
         listForecasts.setAdapter(tripAdapter);
+        tripAdapter.notifyDataSetChanged();
 
         swipeView.setOnRefreshListener(this);
         swipeView.setRefreshing(false);
@@ -110,6 +113,9 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
 
         ((VelociraptorApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
+
+
+
         setHasOptionsMenu(true);
     }
 
@@ -148,6 +154,13 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
 
     public static DisplayTripFragment newInstance() {
         return new DisplayTripFragment();
+    }
+
+    @Override
+    public void onItemClick(View view, int position, Trip trip) {
+        if (mCallback != null) {
+            mCallback.onTripSelected(trip, view);
+        }
     }
 
     // Container Activity must implement this interface

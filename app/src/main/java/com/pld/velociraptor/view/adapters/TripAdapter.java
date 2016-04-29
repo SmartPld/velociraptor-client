@@ -1,4 +1,4 @@
-package com.pld.velociraptor.view.fragment;
+package com.pld.velociraptor.view.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
