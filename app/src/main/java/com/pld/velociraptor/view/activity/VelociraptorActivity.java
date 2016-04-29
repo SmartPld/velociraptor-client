@@ -49,8 +49,8 @@ public class VelociraptorActivity extends AppCompatActivity
 
         //TODO: Use Spinner+AsyncTask to load profile...
        // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
-        //profile = new UserProfile("email", "username", 3, 3, 3);
-        userService.loadUserProfile(this, sessionToken);
+        profile = new UserProfile("email", "username", 3, 3, 3);
+        //userService.loadUserProfile(this, sessionToken);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.tools.RestClient;
 
@@ -31,9 +32,9 @@ public class MapServices {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void drawTrip(TripDrawnCallBack callback, GoogleMap googleMap, Trip trip)  {
+    public void drawTrip(TripDrawnCallBack callback, GoogleMap googleMap, Trip trip, LatLng userPosition, boolean animate)  {
 
-        ItineraireAsyncTask asyncLoader = new ItineraireAsyncTask(restClient, context, callback, googleMap);
+        ItineraireAsyncTask asyncLoader = new ItineraireAsyncTask(restClient, context, callback, googleMap, userPosition, animate);
 
         Trip[] params = {trip};
         int currentapiVersion = Build.VERSION.SDK_INT;

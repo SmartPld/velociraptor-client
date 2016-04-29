@@ -3,6 +3,7 @@ package com.pld.velociraptor.view.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,10 +43,10 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     protected Properties properties;
 
     private List<Trip> trips = new ArrayList<>(); //the forecasts list
-    private TripAdapter tripAdapter; //the adapter for the listView
+    private RecyclerTripAdapter tripAdapter; //the adapter for the listView
 
     @BindView(R.id.listViewTrips)
-    ListView listForecasts; //the view for the forecasts
+    RecyclerView listForecasts; //the view for the forecasts
 
     @BindView(R.id.swipe_container_list)
     SwipeRefreshLayout swipeView; // the swipe to refresh view
@@ -66,7 +67,8 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
 
 
         List<Trip> displayedTrips = trips;
-        tripAdapter = new TripAdapter(getActivity(), properties,displayedTrips);
+        tripAdapter = new RecyclerTripAdapter(getActivity(), displayedTrips, this);
+        listForecasts.setLayoutManager(new LinearLayoutManager(getActivity()));
         listForecasts.setAdapter(tripAdapter);
         tripAdapter.notifyDataSetChanged();
 
@@ -128,7 +130,7 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
         View currentView = inflater.inflate(R.layout.fragment_trip_list,container, false);
         ButterKnife.bind(this, currentView);
 
-        listForecasts.setOnItemClickListener(this);
+        //listForecasts.setOnItemClickListener(this);
 
         try {
             tripService.loadTrips(this);

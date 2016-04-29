@@ -3,16 +3,15 @@ package com.pld.velociraptor.service;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.pld.velociraptor.model.Pos;
-import com.pld.velociraptor.model.Station;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.tools.RestClient;
 
@@ -28,26 +27,25 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import retrofit.RestAdapter;
-
-public class ItineraireAsyncTask extends AsyncTask<Trip, Integer, Boolean> {
-    private static final String TOAST_MSG = "Calcul de l'itinéraire en cours";
-    private static final String TOAST_ERR_MAJ = "Impossible de trouver un itinéraire";
-
+public class ItineraireAsyncTask extends AsyncTask<Trip, Integer, Boolean> implements GoogleMap.CancelableCallback {
     private Context context;
     private GoogleMap gMap;
     private RestClient restClient;
     private TripDrawnCallBack callBack;
     private String editDepart;
     private String editArrivee;
+    private LatLng userPosition;
+    private boolean animate;
     private final ArrayList<LatLng> lstLatLng = new ArrayList<LatLng>();
 
 
-    public ItineraireAsyncTask(RestClient restClient, Context context, TripDrawnCallBack callBack, GoogleMap gMap) {
+    public ItineraireAsyncTask(RestClient restClient, Context context, TripDrawnCallBack callBack, GoogleMap gMap, LatLng userPosition, boolean animate) {
         this.context = context;
         this.gMap= gMap;
         this.callBack = callBack;
         this.restClient = restClient;
+        this.userPosition = userPosition;
+        this.animate = animate;
     }
 
     /**
@@ -55,7 +53,7 @@ public class ItineraireAsyncTask extends AsyncTask<Trip, Integer, Boolean> {
      */
     @Override
     protected void onPreExecute() {
-        Toast.makeText(context, TOAST_MSG, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -123,17 +121,56 @@ public class ItineraireAsyncTask extends AsyncTask<Trip, Integer, Boolean> {
     @Override
     protected void onPostExecute(final Boolean result) {
         if(!result) {
-            Toast.makeText(context, TOAST_ERR_MAJ, Toast.LENGTH_SHORT).show();
         }
         else {
             //On déclare le polyline, c'est-à-dire le trait (ici bleu) que l'on ajoute sur la carte pour tracer l'itinéraire
             final PolylineOptions polylines = new PolylineOptions();
             polylines.color(Color.RED);
 
+            double biggest_long=0;
+            double lowest_long=200;
+            double biggest_lat=0;
+            double lowest_lat=200;
+
+
+            if(userPosition != null) {
+                if (userPosition.latitude > biggest_lat) {
+                    biggest_lat = userPosition.latitude;
+                }
+                if (userPosition.latitude < lowest_lat) {
+                    lowest_lat = userPosition.latitude;
+                }
+
+                if (userPosition.longitude > biggest_long) {
+                    biggest_long = userPosition.longitude;
+                }
+                if (userPosition.longitude < lowest_long) {
+                    lowest_long = userPosition.longitude;
+                }
+            }
+
+
             //On construit le polyline
             for(final LatLng latLng : lstLatLng) {
+
+                if(latLng.latitude > biggest_lat){
+                    biggest_lat = latLng.latitude;
+                }
+                if(latLng.latitude < lowest_lat){
+                    lowest_lat = latLng.latitude;
+                }
+
+                if(latLng.longitude > biggest_long){
+                    biggest_long = latLng.longitude;
+                }
+                if(latLng.longitude < lowest_long){
+                    lowest_long = latLng.longitude;
+                }
+
                 polylines.add(latLng);
             }
+
+            LatLngBounds bounds = new LatLngBounds( new LatLng(lowest_lat, lowest_long),new LatLng(biggest_lat, biggest_long));
 
             //On déclare un marker vert que l'on placera sur le départ
             final MarkerOptions markerA = new MarkerOptions();
@@ -146,10 +183,19 @@ public class ItineraireAsyncTask extends AsyncTask<Trip, Integer, Boolean> {
             markerB.icon(BitmapDescriptorFactory.defaultMarker(100));
 
             //On met à jour la carte
-            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lstLatLng.get(0), 10));
+
+            gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+
+            if(animate){
+                gMap.moveCamera(CameraUpdateFactory.zoomTo(0.90f));
+                gMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200), 600, this);
+            }
+            //gMap.moveCamera(CameraUpdateFactory.zoomTo(0.90f));
             gMap.addMarker(markerA);
             gMap.addPolyline(polylines);
             gMap.addMarker(markerB);
+
+            callBack.onTripDrawn(userPosition !=  null);
         }
     }
 
@@ -185,4 +231,13 @@ public class ItineraireAsyncTask extends AsyncTask<Trip, Integer, Boolean> {
         }
     }
 
+    @Override
+    public void onFinish() {
+
+    }
+
+    @Override
+    public void onCancel() {
+
+    }
 }

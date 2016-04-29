@@ -1,14 +1,16 @@
 package com.pld.velociraptor.view.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.model.Trip;
+
+import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +37,15 @@ public class DetailsTripFragment extends BaseFragment implements View.OnClickLis
 
     @BindView(R.id.arrivee_address)
     TextView arriveeAddress;
+
+    @BindView(R.id.distance)
+    TextView distance;
+
+    @BindView(R.id.delta)
+    TextView delta;
+
+    @BindView(R.id.price)
+    TextView price;
 
 
     public static DetailsTripFragment newInstance(Bundle bundleArg, Trip trip){
@@ -68,6 +79,12 @@ public class DetailsTripFragment extends BaseFragment implements View.OnClickLis
             arriveeName.setText(trip.getStation_end().getName());
             arriveeAddress.setText(trip.getStation_end().getAddress());
 
+            distance.setText(trip.getDistance()+"km");
+
+            delta.setText(trip.getDelta_elevation()+"m");
+
+            price.setText(trip.getPoints()+" points");
+
         }
 
         return v;
@@ -75,6 +92,11 @@ public class DetailsTripFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        Snackbar snackbar = Snackbar
+                .make(v, R.string.selected_trip, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
+
     }
 }
 

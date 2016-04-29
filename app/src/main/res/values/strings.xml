@@ -24,4 +24,5 @@
     <string name="arriv_e">Arrivée :</string>
     <string name="informations">Informations :</string>
     <string name="prix">Prix :</string>
+    <string name="selected_trip">Trajet sélectionné !</string>
 </resources>
