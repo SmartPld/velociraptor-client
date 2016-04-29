@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,6 +23,7 @@ import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.UserLoadedCallBack;
 import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.view.fragment.DisplayTripFragment;
+import com.pld.velociraptor.view.fragment.FilterFragment;
 
 import javax.inject.Inject;
 
@@ -41,14 +43,14 @@ public class VelociraptorActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_velociraptor);
 
-        ((VelociraptorApplication)this.getApplication()).getAppComponent().inject(this); //here injection
+        ((VelociraptorApplication) this.getApplication()).getAppComponent().inject(this); //here injection
 
         //customize view
         Bundle b = getIntent().getExtras();
         this.sessionToken = b.getString("sessionToken");
 
         //TODO: Use Spinner+AsyncTask to load profile...
-       // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
+        // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
         //profile = new UserProfile("email", "username", 3, 3, 3);
         userService.loadUserProfile(this, sessionToken);
 
@@ -56,7 +58,23 @@ public class VelociraptorActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //initialize listener that forwards to filter fragment once button has been clicked
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View view) {
+
+                                       FilterFragment filterFrag = (FilterFragment) getSupportFragmentManager().findFragmentByTag(FilterFragment.TAG);
+                                       if (filterFrag == null)
+                                           filterFrag = FilterFragment.newInstance();
+
+                                       FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                       transaction.replace(R.id.fragment_container, filterFrag, FilterFragment.TAG);
+                                       transaction.addToBackStack(null);
+                                       transaction.commit();
+                                   }
+                               }
+        );
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -70,7 +88,9 @@ public class VelociraptorActivity extends AppCompatActivity
 
         DisplayTripFragment listFrag = (DisplayTripFragment) getSupportFragmentManager().findFragmentByTag(DisplayTripFragment.TAG);
 
-        if (listFrag == null) {
+        if (listFrag == null)
+
+        {
             listFrag = DisplayTripFragment.newInstance();
 
             // Add the fragment to the 'fragment_container' FrameLayout replace to avoid reinstancing overlaying fragments
@@ -78,6 +98,7 @@ public class VelociraptorActivity extends AppCompatActivity
                     .add(R.id.fragment_container, listFrag, DisplayTripFragment.TAG)
                     .commit();
         }
+
     }
 
     @Override
