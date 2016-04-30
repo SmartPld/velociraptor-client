@@ -156,7 +156,6 @@ public class VelociraptorActivity extends AppCompatActivity
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_filter_container, filterFrag, FilterFragment.TAG);
-            transaction.addToBackStack(null);
             transaction.commit();
         }
 
