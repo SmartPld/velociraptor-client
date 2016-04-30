@@ -1,7 +1,7 @@
 package com.pld.velociraptor.view.fragment;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
+import com.google.gson.Gson;
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
@@ -20,7 +20,6 @@ import com.pld.velociraptor.service.TripLoadedCallback;
 import com.pld.velociraptor.service.TripService;
 import com.pld.velociraptor.tools.VeloFilter;
 import com.pld.velociraptor.view.adapters.RecyclerTripAdapter;
-import com.pld.velociraptor.view.adapters.TripAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +38,9 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
 
     public static final String TAG = "DisplayTripFragment";
 
+
+    private List<Trip> trips = new ArrayList<>(); //the forecasts list
+    private RecyclerTripAdapter tripAdapter; //the adapter for the listView
     private VeloFilter filter;
 
     @Inject
@@ -47,8 +49,8 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     @Inject
     protected Properties properties;
 
-    private List<Trip> trips = new ArrayList<>(); //the forecasts list
-    private RecyclerTripAdapter tripAdapter; //the adapter for the listView
+    @Inject
+    Gson gson;
 
     @BindView(R.id.listViewTrips)
     RecyclerView listForecasts; //the view for the forecasts
@@ -141,8 +143,15 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
         View currentView = inflater.inflate(R.layout.fragment_trip_list,container, false);
         ButterKnife.bind(this, currentView);
 
-        //listForecasts.setOnItemClickListener(this);
-        filter = new VeloFilter(null, null, null, null, null, null, null);
+         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+         String filterJson = sharedPref.getString(FilterFragment.KEY_FILTER, "null_filter");
+         if(filterJson.compareTo("null_filter")!=0) { // then a filter is stored here
+             filter = gson.fromJson(filterJson, VeloFilter.class);
+         } else{
+             filter = new VeloFilter(null, null, null, null, null, null, null);
+         }
+
         try {
             tripService.loadTrips(filter, this);
 
