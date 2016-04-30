@@ -6,14 +6,17 @@ import android.os.AsyncTask;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.RestClient;
+import com.pld.velociraptor.tools.VeloFilter;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import retrofit.RetrofitError;
+
 /**
  * Created by a607937 on 09/06/2015.
  */
-public class LoadTripsAsyncTask extends AsyncTask<Void, Void, List<Trip>> {
+public class LoadTripsAsyncTask extends AsyncTask<VeloFilter, Void, List<Trip>> {
 
     public static final String TAG = "LoadUserAsyncTask";
 
@@ -43,11 +46,20 @@ public class LoadTripsAsyncTask extends AsyncTask<Void, Void, List<Trip>> {
     }
 
     @Override
-    protected List<Trip> doInBackground(Void... token) {
+    protected List<Trip> doInBackground(VeloFilter... filters) {
+
+        VeloFilter filter = filters[0];
 
         List<Trip> result = null;
 
-        result = client.getTrips();
+
+        try{
+            result = client.getTrips(filter);
+        }catch(RetrofitError error){
+            pendingException = error;
+
+        }
+
 
         return result;
     }
@@ -57,6 +69,11 @@ public class LoadTripsAsyncTask extends AsyncTask<Void, Void, List<Trip>> {
 
         TripLoadedCallback callBack  = mCallBack.get();
         if (mCallBack == null) {
+            return;
+        }
+
+        if(pendingException != null){
+            callBack.onTripsLoadingError(pendingException);
             return;
         }
         callBack.onTripsLoaded(result);

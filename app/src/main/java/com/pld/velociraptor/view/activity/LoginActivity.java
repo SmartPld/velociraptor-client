@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.ProgressDialog;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -29,25 +30,32 @@ import android.widget.TextView;
 
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.service.UserLoggedCallBack;
 import com.pld.velociraptor.service.UserService;
+import com.pld.velociraptor.tools.VeloTokenCredentials;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit.RetrofitError;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>,UserLoggedCallBack {
 
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
+
+    @Inject
+    UserService userService;
     /**
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
@@ -68,6 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Inject
     protected UserService profileInteraction ;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,41 +195,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (false) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
 
-        //Finally perform a semantic check using the ProfileInteraction
-        String sessionToken  = "ok";//profileInteraction.getUserToken(email, password);
-        if(sessionToken.startsWith("ERROR"))
-        {
-            mEmailView.setError(sessionToken);
-            focusView = mEmailView;
-            cancel = true;
+
+        if(!cancel){
+            mProgressDialog = ProgressDialog.show(this, getString(R.string.wait_please),
+                    getString(R.string.connecting), true);
+            //Finally perform a semantic check using the ProfileInteraction
+            userService.getUserToken(email, password, this);
         }
-
-
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
-
-            //goes some place here...
-            Intent velociraptor = new Intent(getApplicationContext(), VelociraptorActivity.class);
-            Bundle b = new Bundle();
-            b.putString("sessionToken", sessionToken);
-            velociraptor.putExtras(b);
-            startActivity(velociraptor);
-            finish();
         }
 
 
@@ -311,6 +303,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
+    }
+
+    @Override
+    public void userLogged(VeloTokenCredentials response) {
+            mProgressDialog.hide();
+            //goes some place here...
+            Intent velociraptor = new Intent(getApplicationContext(), VelociraptorActivity.class);
+            Bundle b = new Bundle();
+            b.putString("sessionToken", response.getId());
+            velociraptor.putExtras(b);
+            startActivity(velociraptor);
+            finish();
+
+    }
+
+    @Override
+    public void loginError(Exception exception) {
+        mProgressDialog.hide();
+        RetrofitError error = (RetrofitError) exception;
+        mEmailView.setError("An error occured "+error.getResponse().getStatus());
+        mEmailView.requestFocus();
     }
 
 

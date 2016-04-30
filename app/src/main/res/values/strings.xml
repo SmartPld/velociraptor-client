@@ -25,4 +25,7 @@
     <string name="informations">Informations :</string>
     <string name="prix">Prix :</string>
     <string name="selected_trip">Trajet sélectionné !</string>
+    <string name="rechercher">Rechercher</string>
+    <string name="wait_please">Veuillez patienter</string>
+    <string name="connecting">Connection en cours...</string>
 </resources>

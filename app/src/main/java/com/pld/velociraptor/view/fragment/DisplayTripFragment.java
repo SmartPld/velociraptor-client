@@ -1,7 +1,9 @@
 package com.pld.velociraptor.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,7 @@ import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.service.TripLoadedCallback;
 import com.pld.velociraptor.service.TripService;
+import com.pld.velociraptor.tools.VeloFilter;
 import com.pld.velociraptor.view.adapters.RecyclerTripAdapter;
 import com.pld.velociraptor.view.adapters.TripAdapter;
 
@@ -35,6 +38,8 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
         TripLoadedCallback, SwipeRefreshLayout.OnRefreshListener, RecyclerTripAdapter.OnItemClickListener {
 
     public static final String TAG = "DisplayTripFragment";
+
+    private VeloFilter filter;
 
     @Inject
     protected TripService tripService;
@@ -78,10 +83,16 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     }
 
     @Override
+    public void onTripsLoadingError(Exception e) {
+        Snackbar.make(this.getView(), "Problème réseau", Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
     public void onRefresh() {
         swipeView.setOnRefreshListener(null);
         try {
-            tripService.loadTrips(this);
+
+            tripService.loadTrips(filter, this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,15 +100,15 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnTripSelectedListener) activity;
+            mCallback = (OnTripSelectedListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
     }
@@ -131,9 +142,9 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
         ButterKnife.bind(this, currentView);
 
         //listForecasts.setOnItemClickListener(this);
-
+        filter = new VeloFilter(null, null, null, null, null, null, null);
         try {
-            tripService.loadTrips(this);
+            tripService.loadTrips(filter, this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,5 +179,13 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     // Container Activity must implement this interface
     public interface OnTripSelectedListener {
         void onTripSelected(Trip selectedTrip, View v);
+    }
+
+
+    public void researchTrips(VeloFilter filter){
+
+        this.filter = filter;
+        tripService.loadTrips(filter, this);
+
     }
 }

@@ -10,7 +10,6 @@ import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.TripServiceApi;
 import com.pld.velociraptor.service.UserServiceApi;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
@@ -26,7 +25,7 @@ public class RestClient {
 
     private static final String TAG = "RestClient";
     @Inject
-    protected UserServiceApi userService;
+    protected UserServiceApi userServiceApi;
 
     @Inject
     protected TripServiceApi tripServiceApi;
@@ -43,7 +42,7 @@ public class RestClient {
     }
 
     public UserServiceApi getUserService() {
-        return userService;
+        return userServiceApi;
     }
 
 
@@ -65,7 +64,7 @@ public class RestClient {
      */
     public UserProfile getUserProfile(String sessionToken) {
 
-        UserProfile user = this.userService.getUserProfile(sessionToken);
+        UserProfile user = this.userServiceApi.getUserProfile(sessionToken);
 
         return user;
     }
@@ -74,9 +73,19 @@ public class RestClient {
      * gets the trips
      * @return
      */
-    public List<Trip> getTrips() {
+    public List<Trip> getTrips(VeloFilter filter) {
 
-        List<Trip> trips = this.tripServiceApi.loadTrips(10);
+        List<Trip> trips = this.tripServiceApi.loadTrips(filter.getLimit(), filter.getMinDistance(), filter.getMaxDistance());
         return trips;
+    }
+
+    public VeloTokenCredentials loginUser(String login, String password) {
+
+        return this.userServiceApi.login(new VeloCredentials(login, password));
+    }
+
+    public void logoutUser(String sessionToken) {
+
+        this.userServiceApi.logout(sessionToken);
     }
 }
