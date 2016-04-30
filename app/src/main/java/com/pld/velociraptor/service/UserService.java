@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import com.pld.velociraptor.tools.RestClient;
+import com.pld.velociraptor.tools.VeloTokenCredentials;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,18 +31,28 @@ public class UserService {
 
     }
 
-    public String getUserToken(String usermail, String password)
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void getUserToken(String username, String password, UserLoggedCallBack callback)
     {
-        return userServiceApi.getUserToken(usermail, password);
 
+        LoginUserAsyncTask asyncLoader = new LoginUserAsyncTask(restClient, context, callback);
+
+        String[] params = {username, password};
+        int currentapiVersion = Build.VERSION.SDK_INT;
+        //here we check the level api
+        if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
+        } else {
+            asyncLoader.execute(params);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void loadUserProfile(UserLoadedCallBack callback, String token)  {
+    public void loadUserProfile(UserLoadedCallBack callback, VeloTokenCredentials credentials)  {
 
         LoadUserAsyncTask asyncLoader = new LoadUserAsyncTask(restClient, context, callback);
 
-        String[] params = {token};
+        String[] params = {credentials.getId()};
         int currentapiVersion = Build.VERSION.SDK_INT;
         //here we check the level api
         if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
@@ -52,10 +63,19 @@ public class UserService {
 
     }
 
-    public void logout(String sessionToken)
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void logout(String sessionToken, UserLoggedOutCallBack callback)
     {
-        //TODO... delegate
-        userServiceApi.logout(sessionToken);
+        LogoutUserAsyncTask asyncLoader = new LogoutUserAsyncTask(restClient, context, callback);
+
+        String[] params = {sessionToken};
+        int currentapiVersion = Build.VERSION.SDK_INT;
+        //here we check the level api
+        if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
+        } else {
+            asyncLoader.execute(params);
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -40,6 +41,10 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
 
     private final static String KEY_TRIP = "key_trip";
     private static final int LOCATION = 0;
+
+    private boolean tripDrawnUser = false;
+    private LatLng userposition =  null;
+
 
     @BindView(R.id.fab_details)
     protected FloatingActionButton fab;
@@ -142,6 +147,8 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
         super.onBackPressed();
     }
 
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -158,8 +165,13 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
             @Override
             public void onMyLocationChange(Location location) {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                userposition = loc;
                 map.addMarker(new MarkerOptions().position(loc))
                         .setTitle("Votre position");
+
+                if(trip != null && !tripDrawnUser){
+                    mapServices.drawTrip(DetailsTripActivity.this, map, trip, loc, true);
+                }
 
             }
         };
@@ -171,8 +183,11 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
         map.getUiSettings().setZoomGesturesEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(false);
 
-        if(trip != null){
-            mapServices.drawTrip(this, map, trip);
+
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+        if(trip != null && userposition == null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER)){
+            mapServices.drawTrip(this, map, trip, null, true);
         }
 
 
@@ -220,8 +235,8 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void onTripDrawn() {
-
+    public void onTripDrawn(boolean tripDrawnUser) {
+        this.tripDrawnUser = tripDrawnUser;
     }
 
     @Override

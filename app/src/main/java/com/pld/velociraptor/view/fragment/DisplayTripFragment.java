@@ -1,8 +1,11 @@
 package com.pld.velociraptor.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.service.TripLoadedCallback;
 import com.pld.velociraptor.service.TripService;
+import com.pld.velociraptor.tools.VeloFilter;
 import com.pld.velociraptor.view.adapters.RecyclerTripAdapter;
 import com.pld.velociraptor.view.adapters.TripAdapter;
 
@@ -35,6 +39,8 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
 
     public static final String TAG = "DisplayTripFragment";
 
+    private VeloFilter filter;
+
     @Inject
     protected TripService tripService;
 
@@ -42,10 +48,10 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     protected Properties properties;
 
     private List<Trip> trips = new ArrayList<>(); //the forecasts list
-    private TripAdapter tripAdapter; //the adapter for the listView
+    private RecyclerTripAdapter tripAdapter; //the adapter for the listView
 
     @BindView(R.id.listViewTrips)
-    ListView listForecasts; //the view for the forecasts
+    RecyclerView listForecasts; //the view for the forecasts
 
     @BindView(R.id.swipe_container_list)
     SwipeRefreshLayout swipeView; // the swipe to refresh view
@@ -66,7 +72,8 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
 
 
         List<Trip> displayedTrips = trips;
-        tripAdapter = new TripAdapter(getActivity(), properties,displayedTrips);
+        tripAdapter = new RecyclerTripAdapter(getActivity(), displayedTrips, this);
+        listForecasts.setLayoutManager(new LinearLayoutManager(getActivity()));
         listForecasts.setAdapter(tripAdapter);
         tripAdapter.notifyDataSetChanged();
 
@@ -76,10 +83,16 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     }
 
     @Override
+    public void onTripsLoadingError(Exception e) {
+        Snackbar.make(this.getView(), "Problème réseau", Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
     public void onRefresh() {
         swipeView.setOnRefreshListener(null);
         try {
-            tripService.loadTrips(this);
+
+            tripService.loadTrips(filter, this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,15 +100,15 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnTripSelectedListener) activity;
+            mCallback = (OnTripSelectedListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
     }
@@ -128,10 +141,10 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
         View currentView = inflater.inflate(R.layout.fragment_trip_list,container, false);
         ButterKnife.bind(this, currentView);
 
-        listForecasts.setOnItemClickListener(this);
-
+        //listForecasts.setOnItemClickListener(this);
+        filter = new VeloFilter(null, null, null, null, null, null, null);
         try {
-            tripService.loadTrips(this);
+            tripService.loadTrips(filter, this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,5 +179,13 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     // Container Activity must implement this interface
     public interface OnTripSelectedListener {
         void onTripSelected(Trip selectedTrip, View v);
+    }
+
+
+    public void researchTrips(VeloFilter filter){
+
+        this.filter = filter;
+        tripService.loadTrips(filter, this);
+
     }
 }

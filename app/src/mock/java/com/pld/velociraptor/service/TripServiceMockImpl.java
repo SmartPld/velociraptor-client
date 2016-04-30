@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
+import com.pld.velociraptor.tools.VeloFilter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import retrofit.converter.GsonConverter;
+import retrofit.http.Query;
 
 /**
  * Created by schieder on 4/26/16.
@@ -43,10 +45,8 @@ public class TripServiceMockImpl implements TripServiceApi {
 
     }
 
-
     @Override
-    public List<Trip> loadTrips(int nb) {
-
+    public List<Trip> loadTrips(Integer limit,  Integer minDist, Integer maxDist) {
         List<Trip> result = new ArrayList<>();
         try {
             InputStream is = context.getAssets().open("mock.json");
@@ -62,7 +62,6 @@ public class TripServiceMockImpl implements TripServiceApi {
             Type listType = new TypeToken<List<Trip>>() {}.getType();
             result = converter.fromJson(json, listType);
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,5 +69,4 @@ public class TripServiceMockImpl implements TripServiceApi {
         Log.d("gson", "test");
         return result;
     }
-
 }

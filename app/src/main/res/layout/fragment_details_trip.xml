@@ -141,6 +141,7 @@
                                 </LinearLayout>
                                 <LinearLayout
                                     android:orientation="horizontal"
+                                    android:layout_marginLeft="8dp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     >
@@ -154,19 +155,56 @@
 
                                         <TextView
                                             android:layout_width="wrap_content"
+                                            android:id="@+id/price"
                                             android:layout_height="match_parent"
                                             android:text="@string/informations"
-                                            android:gravity="bottom"
-                                            tools:text="Invitations"
+                                            android:gravity="center"
+                                            tools:text="14 pts"
                                             android:layout_marginLeft="8dp" />
                                 </LinearLayout>
                                 <LinearLayout
                                     android:orientation="horizontal"
+                                    android:layout_marginLeft="8dp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     >
 
 
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:id="@+id/imageView9"
+                                            android:src="@drawable/ic_settings_ethernet_black_24dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/distance"
+                                            android:gravity="center"
+                                            tools:text="2.5km"
+                                            android:layout_marginLeft="8dp" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    >
+
+
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:id="@+id/imageView10"
+                                            android:src="@drawable/ic_terrain_black_24dp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:id="@+id/delta"
+                                            android:gravity="center"
+                                            tools:text="325m"
+                                            android:layout_marginLeft="8dp" />
                                 </LinearLayout>
 
                         </LinearLayout>

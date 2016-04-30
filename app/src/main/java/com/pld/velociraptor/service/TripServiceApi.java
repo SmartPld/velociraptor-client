@@ -15,6 +15,8 @@ import retrofit.http.Query;
  */
 public interface TripServiceApi {
     @GET("/trajets")
-    List<Trip> loadTrips(@Query("filter[limit]")int limit);
+    List<Trip> loadTrips(@Query("filter[limit]")Integer limit,
+                         @Query("filter[where][distance][gte]") Integer minDist,
+                         @Query("filter[where][distance][lte]") Integer maxDist);
 
 }

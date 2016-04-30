@@ -10,9 +10,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,23 +22,36 @@ import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
+import com.pld.velociraptor.service.TripService;
 import com.pld.velociraptor.service.UserLoadedCallBack;
+import com.pld.velociraptor.service.UserLoggedOutCallBack;
 import com.pld.velociraptor.service.UserService;
+import com.pld.velociraptor.tools.VeloFilter;
 import com.pld.velociraptor.view.fragment.DisplayTripFragment;
 import com.pld.velociraptor.view.fragment.FilterFragment;
+import com.pld.velociraptor.view.fragment.OnResearchRequestedListener;
 
 import javax.inject.Inject;
 
 
 public class VelociraptorActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserLoadedCallBack, DisplayTripFragment.OnTripSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, UserLoadedCallBack, DisplayTripFragment.OnTripSelectedListener, UserLoggedOutCallBack,
+        OnResearchRequestedListener{
 
     private String sessionToken;
     private UserProfile profile;
 
+    private boolean researchLaunched = false; //true if a research has already been sent
 
     @Inject
     UserService userService;
+
+    @Inject
+    TripService tripService;
+
+    NavigationView navigationViewFilter;
+
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +65,14 @@ public class VelociraptorActivity extends AppCompatActivity
         this.sessionToken = b.getString("sessionToken");
 
         //TODO: Use Spinner+AsyncTask to load profile...
-        // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
-        //profile = new UserProfile("email", "username", 3, 3, 3);
-        userService.loadUserProfile(this, sessionToken);
 
+       // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
+        profile = new UserProfile("email", "username", 3, 3, 3);
+        //userService.loadUserProfile(this, sessionToken);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         //initialize listener that forwards to filter fragment once button has been clicked
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -64,21 +80,54 @@ public class VelociraptorActivity extends AppCompatActivity
                                    @Override
                                    public void onClick(View view) {
 
-                                       FilterFragment filterFrag = (FilterFragment) getSupportFragmentManager().findFragmentByTag(FilterFragment.TAG);
+
+                                       drawer.openDrawer(Gravity.RIGHT);
+                                      /** FilterFragment filterFrag = (FilterFragment) getSupportFragmentManager().findFragmentByTag(FilterFragment.TAG);
                                        if (filterFrag == null)
                                            filterFrag = FilterFragment.newInstance();
 
                                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                                        transaction.replace(R.id.fragment_container, filterFrag, FilterFragment.TAG);
                                        transaction.addToBackStack(null);
-                                       transaction.commit();
+                                       transaction.commit();*/
                                    }
                                }
         );
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        navigationViewFilter = (NavigationView) findViewById(R.id.nav_view_right);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                if(!view.equals(navigationViewFilter)){
+                    super.onDrawerClosed(drawer);
+                }
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                if(!drawerView.equals(navigationViewFilter)){
+                    super.onDrawerOpened(drawer);
+                    invalidateOptionsMenu();
+                }
+                // creates call to onPrepareOptionsMenu()
+            }
+
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                if(!drawerView.equals(navigationViewFilter)){
+                    super.onDrawerSlide(drawerView, slideOffset); // this disables the animation
+                }else{
+                    super.onDrawerSlide(drawerView, 0); // this disables the animation
+                }
+
+            }
+        };
+
+
+
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -99,13 +148,25 @@ public class VelociraptorActivity extends AppCompatActivity
                     .commit();
         }
 
+
+
+        FilterFragment filterFrag = (FilterFragment) getSupportFragmentManager().findFragmentByTag(FilterFragment.TAG);
+        if (filterFrag == null) {
+            filterFrag = FilterFragment.newInstance();
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_filter_container, filterFrag, FilterFragment.TAG);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
     }
+
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen(Gravity.RIGHT)) {
+            drawer.closeDrawer(Gravity.RIGHT);
         } else {
             super.onBackPressed();
         }
@@ -169,12 +230,9 @@ public class VelociraptorActivity extends AppCompatActivity
         } else if (id == R.id.nav_disconnect) {
 
             // logout
-            userService.logout(sessionToken);
+            userService.logout(sessionToken, this);
 
-            // redirect to login activity
-            Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(loginIntent);
-            finish();
+
         }
 
         //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -191,5 +249,26 @@ public class VelociraptorActivity extends AppCompatActivity
     public void onTripSelected(Trip selectedTrip, View v) {
         Intent intent = DetailsTripActivity.newIntent(VelociraptorActivity.this, selectedTrip);
         startActivity(intent);
+    }
+
+    @Override
+    public void userLoggedOut() {
+        // redirect to login activity
+        Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
+
+    }
+
+    @Override
+    public void researchRequested(VeloFilter filter) {
+
+        DisplayTripFragment listFrag = (DisplayTripFragment) getSupportFragmentManager().findFragmentByTag(DisplayTripFragment.TAG);
+
+        if (listFrag != null) {
+            drawer.closeDrawer(Gravity.RIGHT);
+            listFrag.researchTrips(filter);
+        }
+
     }
 }

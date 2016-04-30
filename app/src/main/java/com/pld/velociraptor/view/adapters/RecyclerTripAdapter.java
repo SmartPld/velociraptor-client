@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +52,7 @@ public class RecyclerTripAdapter extends RecyclerView.Adapter<RecyclerTripAdapte
     public RecyclerTripAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                    int viewType) {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(context)
                 .inflate(R.layout.item_trip, parent, false);
         // set the view's size, margins, paddings and layout parameters
 
@@ -130,14 +131,26 @@ public class RecyclerTripAdapter extends RecyclerView.Adapter<RecyclerTripAdapte
         @BindView(R.id.delta)
         protected TextView delta;
 
+        @BindView(R.id.card)
+        CardView card;
+
 
         public ViewHolder(View v) {
             super(v);
 
             ButterKnife.bind(this, v);
 
+            v.setClickable(true);
+            card.setOnClickListener(new CardView.OnClickListener(){
 
-
+                @Override
+                public void onClick(View v) {
+                    OnItemClickListener listener = null;
+                    if ((listener = mCallBack.get()) != null) {
+                        mCallBack.get().onItemClick(v, getAdapterPosition(), trips.get(getAdapterPosition()));
+                    }
+                }
+            });
             //v.setOnClickListener(this);
 
         }

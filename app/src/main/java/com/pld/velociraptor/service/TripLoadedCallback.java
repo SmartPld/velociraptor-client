@@ -8,7 +8,8 @@ import java.util.List;
  * Created by thomas on 28/04/2016.
  */
 public interface TripLoadedCallback {
+    void onTripsLoaded(List<Trip> trips);
+    void onTripsLoadingError(Exception e);
 
-    public void onTripsLoaded(List<Trip> trips);
 
 }

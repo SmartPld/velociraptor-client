@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import com.pld.velociraptor.tools.RestClient;
+import com.pld.velociraptor.tools.VeloFilter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,15 +29,16 @@ public class TripService {
     }
 
 
-    public void loadTrips(TripLoadedCallback tripLoadedCallback){
+    public void loadTrips(VeloFilter filter, TripLoadedCallback tripLoadedCallback){
         LoadTripsAsyncTask asyncLoader = new LoadTripsAsyncTask(restClient, context,tripLoadedCallback);
 
+        VeloFilter[] params = {filter};
         int currentapiVersion = Build.VERSION.SDK_INT;
         //here we check the level api
         if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
-            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
         } else {
-            asyncLoader.execute();
+            asyncLoader.execute(params);
         }
     }
 
