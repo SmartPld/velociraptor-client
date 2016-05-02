@@ -20,11 +20,13 @@ public class AcceptTripAsyncTask extends AsyncTask<Integer, Void, Trip> {
     private WeakReference<TripAcceptedCallBack> mCallBack;
     private Context context;
     private Exception pendingException;
+    private UserService userService;
 
-    public AcceptTripAsyncTask(RestClient client, Context context, TripAcceptedCallBack callBack) {
+    public AcceptTripAsyncTask(RestClient client, UserService userService, Context context, TripAcceptedCallBack callBack) {
         mCallBack = new WeakReference<>(callBack);
         this.context = context;
         this.client = client;
+        this.userService = userService;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class AcceptTripAsyncTask extends AsyncTask<Integer, Void, Trip> {
 
         Trip result = null;
         try{
-            result = client.acceptTrip(credentials[0], credentials[1]);
+            result = client.acceptTrip(credentials[0], credentials[1], userService.getCredentials().getId());
             return result;
         }catch(Exception e){
             pendingException = e;

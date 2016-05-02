@@ -19,14 +19,6 @@ import retrofit.http.Query;
 public interface UserServiceApi {
 
     /**
-     * Retrieves a user profile (all profile data unified in an object) from the server using the session key
-     * @param sessionToken
-     * @return
-     */
-    @GET("/user")
-    public UserProfile getUserProfile(@Query("token") String sessionToken);
-
-    /**
      * Tells the server to invalidate the session key
      */
 

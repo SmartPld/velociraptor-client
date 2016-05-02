@@ -49,7 +49,7 @@ public class LoadUserAsyncTask extends AsyncTask<VeloTokenCredentials, Void, Use
        UserProfile result = null;
 
         try {
-            result = client.getUserProfile(token[0].getId());
+            result = client.getUserProfile(token[0].getUserId(),token[0].getId());
         }
         catch(RetrofitError error)
         {

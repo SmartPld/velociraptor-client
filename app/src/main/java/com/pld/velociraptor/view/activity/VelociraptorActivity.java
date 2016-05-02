@@ -37,13 +37,12 @@ import butterknife.ButterKnife;
 
 
 public class VelociraptorActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserLoadedCallBack, DisplayTripFragment.OnTripSelectedListener, UserLoggedOutCallBack,
+        implements NavigationView.OnNavigationItemSelectedListener, DisplayTripFragment.OnTripSelectedListener, UserLoggedOutCallBack,
         OnResearchRequestedListener, View.OnClickListener {
 
     public final static String KEY_USER = "key_user";
 
     private String sessionToken;
-    private UserProfile profile;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -69,17 +68,13 @@ public class VelociraptorActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
-        //customize view
-        Bundle b = getIntent().getExtras();
-        this.sessionToken = b.getString("sessionToken");
-
         //TODO: Use Spinner+AsyncTask to load profile...
-        this.profile = b.getParcelable(KEY_USER);
+        // this.profile = b.getParcelable(KEY_USER);
         //userService.loadUserProfile(this, sessionToken);
 
         // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
         //until loaded from remote we display the most recently stocked
-        profile = new UserProfile("email", "username", 0, 0, 0, 1);
+        //profile = new UserProfile("email", "username", 0, 0, 0, 1);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -175,10 +170,10 @@ public class VelociraptorActivity extends AppCompatActivity
 
         //Customize view according to user profile
         TextView nameView = (TextView) findViewById(R.id.userNameTextView);
-        nameView.setText(profile.getUsername());
+        nameView.setText(userService.getCurrentUser().getUsername());
 
         TextView mailView = (TextView) findViewById(R.id.userMailTextView);
-        mailView.setText(profile.getEmail());
+        mailView.setText(userService.getCurrentUser().getEmail());
 
         //update details in slide in menu:
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_left);
@@ -248,7 +243,7 @@ public class VelociraptorActivity extends AppCompatActivity
         } else if (id == R.id.nav_disconnect) {
 
             // logout
-            userService.logout(sessionToken, this);
+            //userService.logout(sessionToken, this);
 
 
         }
@@ -257,10 +252,6 @@ public class VelociraptorActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onUserLoaded(UserProfile userProfile) {
-        this.profile = userProfile;
-    }
 
     @Override
     public void onTripSelected(Trip selectedTrip, View v) {
