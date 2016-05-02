@@ -11,6 +11,8 @@ import com.pld.velociraptor.tools.VeloFilter;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit.RetrofitError;
 
 /**

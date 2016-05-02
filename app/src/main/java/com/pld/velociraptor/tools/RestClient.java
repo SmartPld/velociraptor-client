@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.TripServiceApi;
+import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.service.UserServiceApi;
 
 import java.util.List;
@@ -36,6 +37,8 @@ public class RestClient {
     @Inject
     protected Properties properties;
 
+    @Inject
+    UserService userService;
 
     @Inject
     public RestClient() {
@@ -75,7 +78,7 @@ public class RestClient {
      */
     public List<Trip> getTrips(VeloFilter filter) {
 
-        List<Trip> trips = this.tripServiceApi.loadTrips(filter.getLimit(), filter.getMinDistance(), filter.getMaxDistance());
+        List<Trip> trips = this.tripServiceApi.loadTrips(filter.getLimit(), filter.getMinDistance(), filter.getMaxDistance(), getAccessToken());
         return trips;
     }
 
@@ -89,10 +92,15 @@ public class RestClient {
     }
 
     public Trip acceptTrip(Integer idUser, Integer idTrip) {
-        return this.userServiceApi.acceptTrip(idUser, idTrip, "");
+        return this.userServiceApi.acceptTrip(idUser, idTrip, "", getAccessToken());
     }
 
     public UserProfile terminateTrip(UserProfile user) {
-        return this.userServiceApi.terminateTrip(user.getId(), "");
+        return this.userServiceApi.terminateTrip(user.getId(), "", getAccessToken() );
+    }
+
+    private String getAccessToken(){
+
+        return userService.getCredentials().getId();
     }
 }

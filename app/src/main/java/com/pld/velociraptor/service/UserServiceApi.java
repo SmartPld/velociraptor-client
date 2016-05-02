@@ -46,12 +46,16 @@ public interface UserServiceApi {
     @POST("/users/{user}/accepttrajet/{trajet}")
     Trip acceptTrip(@Path("user") int idUser,
                     @Path("trajet") int idTrip,
+                    @Query("access_token") String sessionToken,
                     @Body String dummy);
 
     @POST("/users/{user}/validetrajet")
-    UserProfile terminateTrip(@Path("user") int idUser, @Body String dummy);
+    UserProfile terminateTrip(@Path("user") int idUser,
+                              @Query("access_token") String sessionToken,
+                              @Body String dummy);
 
     @GET("/users/{user}")
-    UserProfile getUserProfile(@Path("user") int userId, @Query("access_token") String accessToken);
+    UserProfile getUserProfile(@Path("user") int userId,
+                               @Query("access_token") String accessToken);
 
 }
