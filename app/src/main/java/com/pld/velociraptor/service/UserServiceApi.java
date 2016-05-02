@@ -1,5 +1,6 @@
 package com.pld.velociraptor.service;
 
+import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.VeloCredentials;
 import com.pld.velociraptor.tools.VeloTokenCredentials;
@@ -7,6 +8,7 @@ import com.pld.velociraptor.tools.VeloTokenCredentials;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
@@ -39,4 +41,14 @@ public interface UserServiceApi {
      */
     @POST("/users/login")
     public VeloTokenCredentials login(@Body VeloCredentials credentials);
+
+
+    @POST("/users/{user}/accepttrajet/{trajet}")
+    Trip acceptTrip(@Path("user") int idUser,
+                    @Path("trajet") int idTrip,
+                    @Body String dummy);
+
+    @POST("/users/{user}/validetrajet")
+    UserProfile terminateTrip(@Path("user") int idUser, @Body String dummy);
+
 }

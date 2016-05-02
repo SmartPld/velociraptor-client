@@ -20,8 +20,11 @@ public class Station implements Parcelable{
     private int grid;
     private int altitude;
     private int id;
+    private int available_bike_stands;
+    private int available_bikes;
 
-    public Station(int number, String name, boolean open, String address, String address2, String commune, int nmarrond, boolean bonus, String pole, Pos pos, int grid, int altitude, int id) {
+
+    public Station(int number, String name, boolean open, String address, String address2, String commune, int nmarrond, boolean bonus, String pole, Pos pos, int grid, int altitude, int id, int available_bike_stands, int available_bikes) {
         this.number = number;
         this.name = name;
         this.open = open;
@@ -35,6 +38,9 @@ public class Station implements Parcelable{
         this.grid = grid;
         this.altitude = altitude;
         this.id = id;
+        this.available_bike_stands = available_bike_stands;
+        this.available_bikes = available_bikes;
+
     }
 
 
@@ -52,6 +58,9 @@ public class Station implements Parcelable{
         grid = in.readInt();
         altitude = in.readInt();
         id = in.readInt();
+        available_bike_stands = in.readInt();
+        available_bikes = in.readInt();
+
     }
 
     @Override
@@ -69,6 +78,9 @@ public class Station implements Parcelable{
         dest.writeInt(grid);
         dest.writeInt(altitude);
         dest.writeInt(id);
+        dest.writeInt(available_bike_stands);
+        dest.writeInt(available_bikes);
+
     }
 
     @Override
@@ -190,6 +202,23 @@ public class Station implements Parcelable{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+
+    public int getAvailable_bike_stands() {
+        return available_bike_stands;
+    }
+
+    public void setAvailable_bike_stands(int available_bike_stands) {
+        this.available_bike_stands = available_bike_stands;
+    }
+
+    public int getAvailable_bikes() {
+        return available_bikes;
+    }
+
+    public void setAvailable_bikes(int available_bikes) {
+        this.available_bikes = available_bikes;
     }
 
 

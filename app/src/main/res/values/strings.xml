@@ -28,4 +28,7 @@
     <string name="rechercher">Rechercher</string>
     <string name="wait_please">Veuillez patienter</string>
     <string name="connecting">Connection en cours...</string>
+    <string name="occupation_des_stations">Occupation des stations</string>
+    <string name="trips">Trajets</string>
+    <string name="mon_profil">Mon profil</string>
 </resources>

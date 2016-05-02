@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,19 +26,28 @@ import com.pld.velociraptor.service.UserLoadedCallBack;
 import com.pld.velociraptor.service.UserLoggedOutCallBack;
 import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.tools.VeloFilter;
+import com.pld.velociraptor.view.fragment.DisplayStationFragment;
 import com.pld.velociraptor.view.fragment.DisplayTripFragment;
 import com.pld.velociraptor.view.fragment.FilterFragment;
 import com.pld.velociraptor.view.fragment.OnResearchRequestedListener;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class VelociraptorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, UserLoadedCallBack, DisplayTripFragment.OnTripSelectedListener, UserLoggedOutCallBack,
-        OnResearchRequestedListener{
+        OnResearchRequestedListener, View.OnClickListener {
+
+    public final static String KEY_USER = "key_user";
 
     private String sessionToken;
     private UserProfile profile;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     private boolean researchLaunched = false; //true if a research has already been sent
 
@@ -60,14 +68,18 @@ public class VelociraptorActivity extends AppCompatActivity
 
         ((VelociraptorApplication) this.getApplication()).getAppComponent().inject(this); //here injection
 
+        ButterKnife.bind(this);
+
         //customize view
         Bundle b = getIntent().getExtras();
         this.sessionToken = b.getString("sessionToken");
 
+        this.profile =  b.getParcelable(KEY_USER);
+
         //TODO: Use Spinner+AsyncTask to load profile...
 
        // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
-        profile = new UserProfile("email", "username", 3, 3, 3);
+        profile = new UserProfile("email", "username", 3, 3, 3, 1);
         //userService.loadUserProfile(this, sessionToken);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -75,24 +87,11 @@ public class VelociraptorActivity extends AppCompatActivity
 
 
         //initialize listener that forwards to filter fragment once button has been clicked
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-                                   @Override
-                                   public void onClick(View view) {
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
 
 
-                                       drawer.openDrawer(Gravity.RIGHT);
-                                      /** FilterFragment filterFrag = (FilterFragment) getSupportFragmentManager().findFragmentByTag(FilterFragment.TAG);
-                                       if (filterFrag == null)
-                                           filterFrag = FilterFragment.newInstance();
 
-                                       FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                       transaction.replace(R.id.fragment_container, filterFrag, FilterFragment.TAG);
-                                       transaction.addToBackStack(null);
-                                       transaction.commit();*/
-                                   }
-                               }
-        );
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -144,10 +143,9 @@ public class VelociraptorActivity extends AppCompatActivity
 
             // Add the fragment to the 'fragment_container' FrameLayout replace to avoid reinstancing overlaying fragments
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, listFrag, DisplayTripFragment.TAG)
+                    .replace(R.id.fragment_container, listFrag, DisplayTripFragment.TAG)
                     .commit();
         }
-
 
 
         FilterFragment filterFrag = (FilterFragment) getSupportFragmentManager().findFragmentByTag(FilterFragment.TAG);
@@ -184,13 +182,13 @@ public class VelociraptorActivity extends AppCompatActivity
         mailView.setText(profile.getEmail());
 
         //update details in slide in menu:
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_left);
-        MenuItem bikeMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_bikes);
-        bikeMenuView.setTitle(Integer.toString(profile.getTripsTotal()));
-        MenuItem distanceMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_distance);
-        distanceMenuView.setTitle(Integer.toString(profile.getDistanceTotal()));
-        MenuItem pointsMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_cash);
-        pointsMenuView.setTitle(Integer.toString(profile.getPoints()));
+        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_left);
+        //MenuItem bikeMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_bikes);
+        //bikeMenuView.setTitle(Integer.toString(profile.getTripsTotal()));
+        //MenuItem distanceMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_distance);
+       // distanceMenuView.setTitle(Integer.toString(profile.getDistanceTotal()));
+       // MenuItem pointsMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_cash);
+       // pointsMenuView.setTitle(Integer.toString(profile.getPoints()));
 
         return true;
     }
@@ -217,15 +215,40 @@ public class VelociraptorActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_bikes) {
-            Toast.makeText(this, "La quantité des trajets réalisés",
-                    Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_distance) {
-            Toast.makeText(this, "La distance totale effectuée",
-                    Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_cash) {
-            Toast.makeText(this, "La totalité des remboursements obtenus",
-                    Toast.LENGTH_SHORT).show();
+        if (id == R.id.nav_trips) {
+            DisplayTripFragment listFrag = (DisplayTripFragment) getSupportFragmentManager().findFragmentByTag(DisplayTripFragment.TAG);
+
+            if (listFrag == null)
+
+            {
+                listFrag = DisplayTripFragment.newInstance();
+
+
+            }
+
+            // Add the fragment to the 'fragment_container' FrameLayout replace to avoid reinstancing overlaying fragments
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, listFrag, DisplayTripFragment.TAG)
+                    .commit();
+            fab.setImageResource(R.drawable.ic_search_black_24px);
+            fab.setOnClickListener(this);
+        } else if (id == R.id.nav_stations) {
+
+            DisplayStationFragment stationFragment = (DisplayStationFragment) getSupportFragmentManager().findFragmentByTag(DisplayStationFragment.TAG);
+
+            if (stationFragment == null)
+
+            {
+                stationFragment = DisplayStationFragment.newInstance();
+
+
+            }
+            // Add the fragment to the 'fragment_container' FrameLayout replace to avoid reinstancing overlaying fragments
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, stationFragment, DisplayStationFragment.TAG)
+                    .commit();
+            fab.setImageResource(R.drawable.ic_refresh_black_24dp);
+            fab.setOnClickListener(stationFragment);
         } else if (id == R.id.nav_disconnect) {
 
             // logout
@@ -234,8 +257,7 @@ public class VelociraptorActivity extends AppCompatActivity
 
         }
 
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -269,5 +291,10 @@ public class VelociraptorActivity extends AppCompatActivity
             listFrag.researchTrips(filter);
         }
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        drawer.openDrawer(Gravity.RIGHT);
     }
 }

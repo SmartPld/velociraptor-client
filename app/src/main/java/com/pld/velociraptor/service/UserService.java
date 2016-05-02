@@ -2,9 +2,13 @@ package com.pld.velociraptor.service;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 
+import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.model.Trip;
+import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.RestClient;
 import com.pld.velociraptor.tools.VeloTokenCredentials;
 
@@ -77,5 +81,41 @@ public class UserService {
             asyncLoader.execute(params);
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void acceptTrip(UserProfile user, Trip trip, TripAcceptedCallBack tripAcceptedCallback){
+        AcceptTripAsyncTask asyncLoader = new AcceptTripAsyncTask(restClient, context, tripAcceptedCallback);
+
+        Integer[] params = {user.getId(), trip.getId()};
+        int currentapiVersion = Build.VERSION.SDK_INT;
+        //here we check the level api
+        if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
+        } else {
+            asyncLoader.execute(params);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void terminateTtrip(UserProfile user, TripTerminatedCallBack callBack) {
+        TerminateTripAsyncTask asyncLoader = new TerminateTripAsyncTask(restClient, context, callBack);
+
+        UserProfile[] params = {user};
+        int currentapiVersion = Build.VERSION.SDK_INT;
+        //here we check the level api
+        if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
+        } else {
+            asyncLoader.execute(params);
+        }
+    }
+
+    public UserProfile getCurrentUser(){
+        SharedPreferences sharedPref = context.getSharedPreferences("Users",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        return new UserProfile("ded","de",3,5,10,3);
+    }
+
 
 }

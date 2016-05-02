@@ -10,11 +10,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -26,9 +29,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
+import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.MapServices;
+import com.pld.velociraptor.service.TripAcceptedCallBack;
 import com.pld.velociraptor.service.TripDrawnCallBack;
 import com.pld.velociraptor.service.TripService;
+import com.pld.velociraptor.service.TripTerminatedCallBack;
+import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.view.fragment.DetailsTripFragment;
 import com.pld.velociraptor.view.fragment.VeloMapFragment;
 
@@ -37,10 +44,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, TripDrawnCallBack {
+public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, TripDrawnCallBack, View.OnClickListener, TripAcceptedCallBack, TripTerminatedCallBack {
 
     private final static String KEY_TRIP = "key_trip";
     private static final int LOCATION = 0;
+    private static final String KEY_USER = "key_user";
 
     private boolean tripDrawnUser = false;
     private LatLng userposition =  null;
@@ -48,6 +56,9 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
 
     @BindView(R.id.fab_details)
     protected FloatingActionButton fab;
+
+    @BindView(R.id.coordinator)
+    protected CoordinatorLayout coordinatorLayout;
 
     // protected MapView mapView2;
     protected MapFragment mapFragment;
@@ -57,6 +68,9 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
 
     @Inject
     TripService tripService;
+
+    @Inject
+    UserService userService;
 
     @BindView(R.id.app_bar_layout)
     AppBarLayout abl;
@@ -120,7 +134,7 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
                     }
                 });
 
-        fab.setOnClickListener(detailsTripFragment);
+        fab.setOnClickListener(this);
         fab.show();
 
 
@@ -257,4 +271,38 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     }
 
 
+    @Override
+    public void onClick(View v) {
+        UserProfile user = userService.getCurrentUser();
+        if(user.getCurrentTrip() == null){
+            userService.acceptTrip(user, trip, this);
+        }else {
+            userService.terminateTtrip(user, this);
+
+        }
+
+    }
+
+    @Override
+    public void tripAcceptedError(Exception pendingException) {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Vous avez déjà un trajet en cours...", Snackbar.LENGTH_LONG);
+        snackbar.show();
+
+    }
+
+    @Override
+    public void tripAccepted(Trip result) {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.selected_trip, Snackbar.LENGTH_LONG);
+        snackbar.show();
+        fab.setImageResource(R.drawable.ic_pin_drop_black_24dp);
+        userService.getCurrentUser().setCurrentTrip(result);
+
+    }
+
+    @Override
+    public void tripTerminated(UserProfile user) {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bien joué ! retrouvez vos stats dans le profil...", Snackbar.LENGTH_LONG);
+        snackbar.show();
+        fab.setImageResource(R.drawable.ic_send_black_24dp);
+    }
 }

@@ -85,7 +85,14 @@ public class RestClient {
     }
 
     public void logoutUser(String sessionToken) {
-
         this.userServiceApi.logout(sessionToken);
+    }
+
+    public Trip acceptTrip(Integer idUser, Integer idTrip) {
+        return this.userServiceApi.acceptTrip(idUser, idTrip, "");
+    }
+
+    public UserProfile terminateTrip(UserProfile user) {
+        return this.userServiceApi.terminateTrip(user.getId(), "");
     }
 }
