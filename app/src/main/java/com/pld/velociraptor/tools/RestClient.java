@@ -70,8 +70,8 @@ public class RestClient {
      */
     public UserProfile getUserProfile(int userId, String sessionToken) {
 
-        UserProfile user = this.userServiceApi.getUserProfile(userId,sessionToken);
-        return user;
+        UserWrapper user = this.userServiceApi.getUserProfile(userId,sessionToken);
+        return user.getUtilisateur();
     }
 
     /**
@@ -90,15 +90,16 @@ public class RestClient {
     }
 
     public void logoutUser(String sessionToken) {
-        this.userServiceApi.logout(sessionToken);
+        this.userServiceApi.logout(sessionToken, "");
     }
 
-    public Trip acceptTrip(Integer idUser, Integer idTrip, String sessionToken) {
-        return this.userServiceApi.acceptTrip(idUser, idTrip, "", sessionToken);
+    public UserProfile acceptTrip(Integer idUser, Integer idTrip, String sessionToken) {
+
+        return this.userServiceApi.acceptTrip(idUser, idTrip, sessionToken, "").getUtilisateur();
     }
 
     public UserProfile terminateTrip(UserProfile user, String sessionToken) {
-        return this.userServiceApi.terminateTrip(user.getId(), "", sessionToken );
+        return this.userServiceApi.terminateTrip(user.getId(), sessionToken, "" );
     }
 
 

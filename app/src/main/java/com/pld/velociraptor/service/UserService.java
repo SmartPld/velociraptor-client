@@ -141,6 +141,23 @@ public class UserService {
     }
 
     public void logout(UserProfile user, UserLoggedOutCallBack callBack) {
-        //TODO: tell server token is not valid any more + delete local token
+        SharedPreferences sharedPref = context.getSharedPreferences("Users",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+
+        LogoutUserAsyncTask asyncLoader = new LogoutUserAsyncTask(restClient, context, callBack);
+
+        String[] params = {this.getCredentials().getId()};
+
+        editor.remove(KEY_VELO_CREDENTIALS);
+        editor.commit();
+
+        int currentapiVersion = Build.VERSION.SDK_INT;
+        //here we check the level api
+        if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
+        } else {
+            asyncLoader.execute(params);
+        }
     }
 }

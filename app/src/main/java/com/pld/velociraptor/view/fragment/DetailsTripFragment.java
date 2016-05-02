@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.pld.velociraptor.R;
 import com.pld.velociraptor.model.Trip;
 
 import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +52,9 @@ public class DetailsTripFragment extends BaseFragment implements View.OnClickLis
 
     @BindView(R.id.price)
     TextView price;
+
+    @BindView(R.id.hour_limit)
+    TextView limitHourTextView;
 
 
     public static DetailsTripFragment newInstance(Bundle bundleArg, Trip trip){
@@ -88,6 +94,11 @@ public class DetailsTripFragment extends BaseFragment implements View.OnClickLis
             delta.setText(trip.getDelta_elevation()+"m");
 
             price.setText(trip.getPoints()+" points");
+
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+
+            String date = df.format(trip.getValiditeEnd());
+            limitHourTextView.setText(date);
 
         }
 

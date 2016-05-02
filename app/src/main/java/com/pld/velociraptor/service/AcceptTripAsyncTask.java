@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.pld.velociraptor.model.Trip;
+import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.RestClient;
 
 import java.lang.ref.WeakReference;
@@ -11,7 +12,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by a607937 on 09/06/2015.
  */
-public class AcceptTripAsyncTask extends AsyncTask<Integer, Void, Trip> {
+public class AcceptTripAsyncTask extends AsyncTask<Integer, Void, UserProfile> {
 
     public static final String TAG = "AcceptTripAsyncTask";
 
@@ -42,9 +43,9 @@ public class AcceptTripAsyncTask extends AsyncTask<Integer, Void, Trip> {
     }
 
     @Override
-    protected Trip doInBackground(Integer... credentials) {
+    protected UserProfile doInBackground(Integer... credentials) {
 
-        Trip result = null;
+        UserProfile result = null;
         try{
             result = client.acceptTrip(credentials[0], credentials[1], userService.getCredentials().getId());
             return result;
@@ -58,7 +59,7 @@ public class AcceptTripAsyncTask extends AsyncTask<Integer, Void, Trip> {
     }
 
     @Override
-    protected void onPostExecute(Trip result) {
+    protected void onPostExecute(UserProfile result) {
 
         TripAcceptedCallBack callBack  = mCallBack.get();
         if (mCallBack == null) {

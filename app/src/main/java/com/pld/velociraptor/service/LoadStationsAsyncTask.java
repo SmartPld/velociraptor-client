@@ -43,11 +43,11 @@ public class LoadStationsAsyncTask extends AsyncTask<Void, Void, List<Station>> 
     protected List<Station> doInBackground(Void... credentials) {
 
         List<Station> result = null;
-        //try{
+        try{
             result = client.getStations();
-       // }catch(Exception e){
-       //     pendingException = e;
-       // }
+        }catch(Exception e){
+            pendingException = e;
+        }
 
 
 

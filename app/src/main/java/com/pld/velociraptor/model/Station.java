@@ -3,10 +3,13 @@ package com.pld.velociraptor.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
 /**
  * Created by Thibault on 28/04/2016.
  */
-public class Station implements Parcelable{
+public class Station implements Parcelable, ClusterItem {
     private int number;
     private String name;
     private boolean open;
@@ -222,4 +225,8 @@ public class Station implements Parcelable{
     }
 
 
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(pos.getLat(), pos.getLng());
+    }
 }

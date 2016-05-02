@@ -3,6 +3,8 @@ package com.pld.velociraptor.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 /**
@@ -12,7 +14,9 @@ public class Trip implements Parcelable{
 
     private Station station_start;
     private Station station_end;
+    @SerializedName("validite_start")
     private  Date validiteStart;
+    @SerializedName("validite_end")
     private  Date validiteEnd;
     private  int max_number;
     private  int distance;
@@ -40,6 +44,12 @@ public class Trip implements Parcelable{
         delta_elevation = in.readInt();
         points = in.readInt();
         id = in.readInt();
+        validiteStart = new Date(in.readLong());
+        validiteEnd = new Date(in.readLong());
+    }
+
+    public boolean equals(Trip trip) {
+        return this.id == trip.id;
     }
 
     public static final Creator<Trip> CREATOR = new Creator<Trip>() {
@@ -126,6 +136,7 @@ public class Trip implements Parcelable{
         this.id = ide;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -140,5 +151,7 @@ public class Trip implements Parcelable{
         dest.writeInt(delta_elevation);
         dest.writeInt(points);
         dest.writeInt(id);
+        dest.writeLong(validiteStart.getTime());
+        dest.writeLong(validiteEnd.getTime());
     }
 }

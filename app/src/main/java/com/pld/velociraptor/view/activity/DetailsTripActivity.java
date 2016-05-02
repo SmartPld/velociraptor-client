@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -106,6 +107,15 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        fab.setOnClickListener(this);
+        fab.show();
+        if(userService.getCurrentUser().getTrajet() != null && userService.getCurrentUser().getTrajet().equals(trip)){
+            fab.setImageResource(R.drawable.ic_pin_drop_black_24dp);
+            fab.show();
+        }else if(userService.getCurrentUser().getTrajet() != null){
+            fab.hide();
+        }
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -134,8 +144,7 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
                     }
                 });
 
-        fab.setOnClickListener(this);
-        fab.show();
+
 
 
     }
@@ -274,7 +283,7 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     @Override
     public void onClick(View v) {
         UserProfile user = userService.getCurrentUser();
-        if(user.getCurrentTrip() == null){
+        if(user.getTrajet() == null){
             userService.acceptTrip(user, trip, this);
         }else {
             userService.terminateTtrip(user, this);
@@ -291,11 +300,12 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
     }
 
     @Override
-    public void tripAccepted(Trip result) {
+    public void tripAccepted(UserProfile result) {
         Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.selected_trip, Snackbar.LENGTH_LONG);
         snackbar.show();
         fab.setImageResource(R.drawable.ic_pin_drop_black_24dp);
-        userService.getCurrentUser().setCurrentTrip(result);
+        result.setTrajet(trip);
+        userService.setUser(result);
 
     }
 
@@ -304,5 +314,6 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
         Snackbar snackbar = Snackbar.make(coordinatorLayout, "Bien joué ! retrouvez vos stats dans le profil...", Snackbar.LENGTH_LONG);
         snackbar.show();
         fab.setImageResource(R.drawable.ic_send_black_24dp);
+        userService.setUser(user);
     }
 }

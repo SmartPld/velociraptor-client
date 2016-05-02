@@ -14,7 +14,7 @@ public class UserProfile implements Parcelable{
     private final int distanceTotal;
     private final int points;
     private  int id;
-    private Trip currentTrip;
+    private Trip trajet;
 
     //optional bonus fields
     //private final double averageSpeed;
@@ -37,7 +37,7 @@ public class UserProfile implements Parcelable{
         distanceTotal = in.readInt();
         points = in.readInt();
         id = in.readInt();
-        currentTrip = in.readParcelable(Trip.class.getClassLoader());
+        trajet = in.readParcelable(Trip.class.getClassLoader());
     }
 
     public static final Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
@@ -80,12 +80,12 @@ public class UserProfile implements Parcelable{
         this.id = id;
     }
 
-    public Trip getCurrentTrip() {
-        return currentTrip;
+    public Trip getTrajet() {
+        return trajet;
     }
 
-    public void setCurrentTrip(Trip currenTrip) {
-        this.currentTrip = currenTrip;
+    public void setTrajet(Trip currenTrip) {
+        this.trajet = currenTrip;
     }
 
     public Boolean equals(Trip otherTrip){
@@ -105,6 +105,6 @@ public class UserProfile implements Parcelable{
         dest.writeInt(distanceTotal);
         dest.writeInt(points);
         dest.writeInt(id);
-        dest.writeParcelable(currentTrip, flags);
+        dest.writeParcelable(trajet, flags);
     }
 }

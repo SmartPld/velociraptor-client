@@ -40,6 +40,7 @@ public class VelociraptorActivity extends AppCompatActivity
         OnResearchRequestedListener, View.OnClickListener {
 
     public final static String KEY_USER = "key_user";
+    private static final int ACTIVITY_DETAILS = 0;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -232,10 +233,7 @@ public class VelociraptorActivity extends AppCompatActivity
             fab.setOnClickListener(stationFragment);
         } else if (id == R.id.nav_disconnect) {
 
-
             userService.logout(userService.getCurrentUser(), this);
-
-
 
         }
 
@@ -247,8 +245,28 @@ public class VelociraptorActivity extends AppCompatActivity
     @Override
     public void onTripSelected(Trip selectedTrip, View v) {
         Intent intent = DetailsTripActivity.newIntent(VelociraptorActivity.this, selectedTrip);
-        startActivity(intent);
+        startActivityForResult(intent, ACTIVITY_DETAILS);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == ACTIVITY_DETAILS) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+
+                DisplayTripFragment listFrag = (DisplayTripFragment) getSupportFragmentManager().findFragmentByTag(DisplayTripFragment.TAG);
+
+                if (listFrag != null)
+                {
+                    listFrag.refresh();
+                }
+            }
+        }
+    }
+
+
+
 
     @Override
     public void userLoggedOut() {

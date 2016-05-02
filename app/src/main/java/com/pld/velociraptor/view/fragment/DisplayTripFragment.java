@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.pld.velociraptor.R;
@@ -18,6 +19,7 @@ import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.service.TripLoadedCallback;
 import com.pld.velociraptor.service.TripService;
+import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.tools.VeloFilter;
 import com.pld.velociraptor.view.adapters.RecyclerTripAdapter;
 
@@ -50,6 +52,9 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     protected Properties properties;
 
     @Inject
+    UserService userService;
+
+    @Inject
     Gson gson;
 
     @BindView(R.id.listViewTrips)
@@ -74,10 +79,32 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
 
 
         List<Trip> displayedTrips = trips;
-        tripAdapter = new RecyclerTripAdapter(getActivity(), displayedTrips, this);
+        Trip head = null;
+
+        if(userService.getCurrentUser().getTrajet() != null){
+
+            int i = 0;
+            boolean found = false;
+
+            while(!found && i<displayedTrips.size()){
+
+                if(userService.getCurrentUser().getTrajet().equals(trips.get(i))){
+                    head = trips.get(i);
+                    trips.remove(i);
+                    found = true;
+
+                }
+
+                i++;
+            }
+
+        }
+
+        tripAdapter = new RecyclerTripAdapter(getActivity(), displayedTrips, head, this);
         listForecasts.setLayoutManager(new LinearLayoutManager(getActivity()));
         listForecasts.setAdapter(tripAdapter);
         tripAdapter.notifyDataSetChanged();
+
 
         swipeView.setOnRefreshListener(this);
         swipeView.setRefreshing(false);
@@ -135,6 +162,12 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -183,6 +216,9 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
         if (mCallback != null) {
             mCallback.onTripSelected(trip, view);
         }
+    }
+
+    public void refresh() {
     }
 
     // Container Activity must implement this interface

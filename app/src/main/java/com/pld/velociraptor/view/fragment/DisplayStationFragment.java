@@ -19,11 +19,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Station;
 import com.pld.velociraptor.service.JCDecauxService;
 import com.pld.velociraptor.service.StationsLoadedCallBack;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,7 +36,7 @@ import javax.inject.Inject;
 /**
  * Created by Thibault on 02/05/2016.
  */
-public class DisplayStationFragment extends SupportMapFragment implements OnMapReadyCallback, StationsLoadedCallBack, View.OnClickListener, GoogleMap.CancelableCallback {
+public class DisplayStationFragment extends SupportMapFragment implements OnMapReadyCallback, StationsLoadedCallBack, View.OnClickListener, GoogleMap.CancelableCallback, ClusterManager.OnClusterItemClickListener {
 
     public static final String TAG = "DisplayStaionFragment";
     private static final int LOCATION = 0;
@@ -100,10 +105,11 @@ public class DisplayStationFragment extends SupportMapFragment implements OnMapR
                     public void onMyLocationChange(Location location) {
                         LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                         userPosition = loc;
-                        googleMap.addMarker(new MarkerOptions().position(loc)
-                                .icon(BitmapDescriptorFactory.defaultMarker(getColor(BitmapDescriptorFactory.HUE_BLUE)))
-                                .title("Votre position")
-                        );
+
+                        //googleMap.addMarker(new MarkerOptions().position(loc)
+                       //         .icon(BitmapDescriptorFactory.defaultMarker(getColor(BitmapDescriptorFactory.HUE_BLUE)))
+                        //        .title("Votre position")
+                       // );
 
 
 
@@ -121,7 +127,9 @@ public class DisplayStationFragment extends SupportMapFragment implements OnMapR
         double lowest_long=200;
         double biggest_lat=0;
         double lowest_lat=200;
-
+        ClusterManager mClusterManager = new ClusterManager<>(getContext(), googleMap);
+        mClusterManager.setRenderer(new OwnIconRendered(getContext(), googleMap,mClusterManager));
+        googleMap.setOnCameraChangeListener(mClusterManager);
         for(Station station : stations){
             int sum = station.getAvailable_bike_stands() + station.getAvailable_bikes();
             double availability = 0;
@@ -144,9 +152,11 @@ public class DisplayStationFragment extends SupportMapFragment implements OnMapR
                 lowest_long = station.getPos().getLng();
             }
 
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(station.getPos().getLat(), station.getPos().getLng()))
-                    .icon(BitmapDescriptorFactory.defaultMarker(getColor(availability))).title(station.getName()+" : "+station.getAvailable_bikes()+"/"+sum+" vélo(s) disponibles")
-                   );
+            mClusterManager.addItem(station);
+
+            //googleMap.addMarker(new MarkerOptions().position(new LatLng(station.getPos().getLat(), station.getPos().getLng()))
+            //        .icon(BitmapDescriptorFactory.defaultMarker(getColor(availability))).title(station.getName()+" : "+station.getAvailable_bikes()+"/"+sum+" vélo(s) disponibles")
+            //       );
         }
 
         LatLngBounds bounds = new LatLngBounds( new LatLng(lowest_lat, lowest_long),new LatLng(biggest_lat, biggest_long));
@@ -162,7 +172,7 @@ public float getColor(double availability) {
     } else if (availability < 0.3) {
         return BitmapDescriptorFactory.HUE_RED;
     } else {
-        return BitmapDescriptorFactory.HUE_BLUE;
+        return BitmapDescriptorFactory.HUE_ORANGE;
     }
 }
 
@@ -179,6 +189,59 @@ public float getColor(double availability) {
 
     @Override
     public void onCancel() {
+
+    }
+
+    @Override
+    public boolean onClusterItemClick(ClusterItem clusterItem){
+
+        Station station = (Station)clusterItem;
+
+
+
+
+        return false;
+    }
+
+
+    class OwnIconRendered extends DefaultClusterRenderer<Station> {
+
+        public OwnIconRendered(Context context, GoogleMap map,
+                               ClusterManager<Station> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(Station station, MarkerOptions markerOptions) {
+            int sum = station.getAvailable_bike_stands() + station.getAvailable_bikes();
+            double availability = 0;
+            if(sum >0){
+                availability = (double)(station.getAvailable_bikes()) / sum;
+            }
+
+
+
+            markerOptions.title(station.getName()+" : "+station.getAvailable_bikes()+"/"+sum+" vélo(s) disponibles");
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(getColor(availability)));
+            super.onBeforeClusterItemRendered(station, markerOptions);
+        }
+
+        @Override
+        protected void onBeforeClusterRendered(Cluster<Station> cluster, MarkerOptions markerOptions) {
+
+            int sumBikes = 0;
+            int total = 0;
+            Iterator<Station> it = cluster.getItems().iterator();
+
+            while(it.hasNext()){
+                Station station = it.next();
+
+                sumBikes += station.getAvailable_bikes();
+                total += station.getAvailable_bike_stands() + station.getAvailable_bikes();
+            }
+            markerOptions.title(sumBikes+"/"+total+" vélo(s) disponibles");
+            super.onBeforeClusterRendered(cluster, markerOptions);
+        }
 
     }
 }
