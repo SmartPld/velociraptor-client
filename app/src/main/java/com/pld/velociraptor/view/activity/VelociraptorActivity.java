@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
@@ -74,13 +73,13 @@ public class VelociraptorActivity extends AppCompatActivity
         Bundle b = getIntent().getExtras();
         this.sessionToken = b.getString("sessionToken");
 
-        this.profile =  b.getParcelable(KEY_USER);
-
         //TODO: Use Spinner+AsyncTask to load profile...
-
-       // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
-        profile = new UserProfile("email", "username", 3, 3, 3, 1);
+        this.profile = b.getParcelable(KEY_USER);
         //userService.loadUserProfile(this, sessionToken);
+
+        // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
+        //until loaded from remote we display the most recently stocked
+        profile = new UserProfile("email", "username", 0, 0, 0, 1);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,24 +90,24 @@ public class VelociraptorActivity extends AppCompatActivity
         fab.setOnClickListener(this);
 
 
-
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         navigationViewFilter = (NavigationView) findViewById(R.id.nav_view_right);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
-            /** Called when a drawer has settled in a completely closed state. */
+            /**
+             * Called when a drawer has settled in a completely closed state.
+             */
             public void onDrawerClosed(View view) {
-                if(!view.equals(navigationViewFilter)){
+                if (!view.equals(navigationViewFilter)) {
                     super.onDrawerClosed(drawer);
                 }
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                if(!drawerView.equals(navigationViewFilter)){
+                if (!drawerView.equals(navigationViewFilter)) {
                     super.onDrawerOpened(drawer);
                     invalidateOptionsMenu();
                 }
@@ -116,15 +115,14 @@ public class VelociraptorActivity extends AppCompatActivity
             }
 
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if(!drawerView.equals(navigationViewFilter)){
+                if (!drawerView.equals(navigationViewFilter)) {
                     super.onDrawerSlide(drawerView, slideOffset); // this disables the animation
-                }else{
+                } else {
                     super.onDrawerSlide(drawerView, 0); // this disables the animation
                 }
 
             }
         };
-
 
 
         drawer.setDrawerListener(toggle);
@@ -169,6 +167,7 @@ public class VelociraptorActivity extends AppCompatActivity
         }
     }
 
+    //TODO: Call on async callback once profile has been loaded? -> A discuter demain.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -186,9 +185,9 @@ public class VelociraptorActivity extends AppCompatActivity
         //MenuItem bikeMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_bikes);
         //bikeMenuView.setTitle(Integer.toString(profile.getTripsTotal()));
         //MenuItem distanceMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_distance);
-       // distanceMenuView.setTitle(Integer.toString(profile.getDistanceTotal()));
-       // MenuItem pointsMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_cash);
-       // pointsMenuView.setTitle(Integer.toString(profile.getPoints()));
+        // distanceMenuView.setTitle(Integer.toString(profile.getDistanceTotal()));
+        // MenuItem pointsMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_cash);
+        // pointsMenuView.setTitle(Integer.toString(profile.getPoints()));
 
         return true;
     }
@@ -219,11 +218,8 @@ public class VelociraptorActivity extends AppCompatActivity
             DisplayTripFragment listFrag = (DisplayTripFragment) getSupportFragmentManager().findFragmentByTag(DisplayTripFragment.TAG);
 
             if (listFrag == null)
-
             {
                 listFrag = DisplayTripFragment.newInstance();
-
-
             }
 
             // Add the fragment to the 'fragment_container' FrameLayout replace to avoid reinstancing overlaying fragments
