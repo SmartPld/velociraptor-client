@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import com.google.gson.Gson;
-import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.RestClient;
@@ -29,8 +28,6 @@ public class UserService {
     @Inject
     protected Context context;
 
-    @Inject
-    UserServiceApi userServiceApi;
 
     @Inject
     Gson gson;
@@ -58,36 +55,7 @@ public class UserService {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void loadUserProfile(UserLoadedCallBack callback, VeloTokenCredentials credentials)  {
 
-        LoadUserAsyncTask asyncLoader = new LoadUserAsyncTask(restClient, context, callback);
-
-        String[] params = {credentials.getId()};
-        int currentapiVersion = Build.VERSION.SDK_INT;
-        //here we check the level api
-        if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
-            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
-        } else {
-            asyncLoader.execute(params);
-        }
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void logout(String sessionToken, UserLoggedOutCallBack callback)
-    {
-        LogoutUserAsyncTask asyncLoader = new LogoutUserAsyncTask(restClient, context, callback);
-
-        String[] params = {sessionToken};
-        int currentapiVersion = Build.VERSION.SDK_INT;
-        //here we check the level api
-        if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
-            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
-        } else {
-            asyncLoader.execute(params);
-        }
-    }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void acceptTrip(UserProfile user, Trip trip, TripAcceptedCallBack tripAcceptedCallback){
@@ -146,7 +114,20 @@ public class UserService {
     }
 
 
-    public void getUserProfile(VeloTokenCredentials credentials, UserProfileLoaded callBack) {
+    public void getUserProfile(VeloTokenCredentials credentials, UserLoadedCallBack callBack) {
+
+        LoadUserAsyncTask asyncLoader = new LoadUserAsyncTask(restClient, context, callBack);
+
+        VeloTokenCredentials[] params = {credentials};
+
+        int currentapiVersion = Build.VERSION.SDK_INT;
+        //here we check the level api
+        if (currentapiVersion >= Build.VERSION_CODES.HONEYCOMB) {
+            asyncLoader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, params);
+        } else {
+            asyncLoader.execute(params);
+        }
+
     }
 
     public void setUser(UserProfile user) {

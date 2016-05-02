@@ -5,13 +5,16 @@ import android.os.AsyncTask;
 
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.RestClient;
+import com.pld.velociraptor.tools.VeloTokenCredentials;
 
 import java.lang.ref.WeakReference;
+
+import retrofit.RetrofitError;
 
 /**
  * Created by a607937 on 09/06/2015.
  */
-public class LoadUserAsyncTask extends AsyncTask<String, Void, UserProfile> {
+public class LoadUserAsyncTask extends AsyncTask<VeloTokenCredentials, Void, UserProfile> {
 
     public static final String TAG = "LoadUserAsyncTask";
 
@@ -41,12 +44,17 @@ public class LoadUserAsyncTask extends AsyncTask<String, Void, UserProfile> {
     }
 
     @Override
-    protected UserProfile doInBackground(String... token) {
+    protected UserProfile doInBackground(VeloTokenCredentials... token) {
 
        UserProfile result = null;
 
-            result = client.getUserProfile(token[0]);
-
+        try {
+            result = client.getUserProfile(token[0].getId());
+        }
+        catch(RetrofitError error)
+        {
+            pendingException = error;
+        }
 
         return result;
     }
@@ -58,6 +66,11 @@ public class LoadUserAsyncTask extends AsyncTask<String, Void, UserProfile> {
         if (mCallBack == null) {
             return;
         }
+        if(pendingException != null)
+        {
+            callBack.onUserLoadError(pendingException);
+        }
+
         callBack.onUserLoaded(result);
 
     }
