@@ -15,7 +15,6 @@ import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.tools.VeloFilter;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-import org.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
 
 import java.lang.ref.WeakReference;
 
@@ -49,8 +48,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     TextView maxDistanceTextView;
 
 
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -82,18 +79,17 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                              Bundle savedInstanceState) {
 
 
-
         // Inflate the layout for this fragment
         View currentView = inflater.inflate(R.layout.fragment_filter_settings, container, false);
 
-        ((VelociraptorApplication)getActivity().getApplication()).getAppComponent().inject(this);
+        ((VelociraptorApplication) getActivity().getApplication()).getAppComponent().inject(this);
         ButterKnife.bind(this, currentView);
 
         searchButton.setOnClickListener(this);
         maxDistanceSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                maxDistanceTextView.setText(value+"km");
+                maxDistanceTextView.setText(value + "km");
             }
 
             @Override
@@ -105,21 +101,23 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
 
             }
-
         });
+
+
+
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         String filterJson = sharedPref.getString(KEY_FILTER, "null_filter");
-        if(filterJson.compareTo("null_filter")!=0) { // then a filter is stored here
+        if (filterJson.compareTo("null_filter") != 0) { // then a filter is stored here
             filter = gson.fromJson(filterJson, VeloFilter.class);
-        } else{
+        } else {
             filter = new VeloFilter(null, null, null, null, null, null, null);
         }
 
-        if(filter.getMaxDistance() != null){
+        if (filter.getMaxDistance() != null) {
             maxDistanceSeekBar.setProgress(filter.getMaxDistance());
-            maxDistanceTextView.setText(filter.getMaxDistance()+"km");
+            maxDistanceTextView.setText(filter.getMaxDistance() + "km");
         }
 
 
@@ -134,7 +132,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
 
-        if(mCallback!=null && mCallback.get()!=null){
+        if (mCallback != null && mCallback.get() != null) {
             int maxDistance = maxDistanceSeekBar.getProgress();
             filter.setMaxDistance(maxDistance);
             filter.setMinDistance(0);

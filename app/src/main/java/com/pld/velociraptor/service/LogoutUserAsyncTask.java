@@ -4,13 +4,14 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.pld.velociraptor.tools.RestClient;
+import com.pld.velociraptor.tools.VeloCredentials;
 
 import java.lang.ref.WeakReference;
 
 /**
  * Created by a607937 on 09/06/2015.
  */
-public class LogoutUserAsyncTask extends AsyncTask<String, Void, Void> {
+public class LogoutUserAsyncTask extends AsyncTask<VeloCredentials, Void, Void> {
 
     public static final String TAG = "LoginUserAsyncTask";
 
@@ -40,7 +41,7 @@ public class LogoutUserAsyncTask extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... sessionToken) {
+    protected Void doInBackground(VeloCredentials... sessionToken) {
 
         try{
             client.logoutUser(sessionToken[0]);

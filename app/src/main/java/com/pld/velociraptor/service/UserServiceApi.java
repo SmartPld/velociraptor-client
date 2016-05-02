@@ -23,13 +23,12 @@ public interface UserServiceApi {
      */
 
     @POST("/users/logout")
-    public void logout(@Query("access_token") String sessionToken);
+    public void logout(@Query("access_token") VeloCredentials veloCredentials);
 
 
 
     /**
-     * @return a String either representing a session token OR an error mesage telling why the received data is not valid;
-     * (Error messages begin by the keyword "ERROR")
+     *
      */
     @POST("/users/login")
     public VeloTokenCredentials login(@Body VeloCredentials credentials);
