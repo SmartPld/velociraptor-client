@@ -51,4 +51,7 @@ public interface UserServiceApi {
     @POST("/users/{user}/validetrajet")
     UserProfile terminateTrip(@Path("user") int idUser, @Body String dummy);
 
+    @GET("/users/{user}")
+    UserProfile getUserProfile(@Path("user") int userId, @Query("access_token") String accessToken);
+
 }

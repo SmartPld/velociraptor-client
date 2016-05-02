@@ -15,6 +15,7 @@ import javax.inject.Singleton;
 
 import retrofit.http.Body;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 /**
  * Created by schieder on 4/26/16.
@@ -91,6 +92,11 @@ public class UserServiceMockImpl implements UserServiceApi {
 
     @Override
     public UserProfile terminateTrip(@Path("user") int idUser, @Body String dummy) {
+        return null;
+    }
+
+    @Override
+    public UserProfile getUserProfile(@Path("user") int userId, @Query("access_token") String accessToken) {
         return null;
     }
 

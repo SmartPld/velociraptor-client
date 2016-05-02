@@ -32,6 +32,7 @@ import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.UserLoggedCallBack;
+import com.pld.velociraptor.service.UserProfileLoaded;
 import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.tools.VeloTokenCredentials;
 
@@ -47,7 +48,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>,UserLoggedCallBack {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>,UserLoggedCallBack, UserProfileLoaded {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -87,6 +88,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
 
         ((VelociraptorApplication)this.getApplication()).getAppComponent().inject(this); //here injection
+
+
+        //First, we check the SharedPreferences
+        VeloTokenCredentials credentials = userService.getCredentials();
+
+        if(credentials != null){
+            userService.getUserProfile(credentials, this);
+        }
+
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -208,7 +218,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if(!cancel){
             mProgressDialog = ProgressDialog.show(this, getString(R.string.wait_please),
                     getString(R.string.connecting), true);
-            //Finally perform a semantic check using the ProfileInteraction
+
             userService.getUserToken(email, password, this);
         }
 
@@ -310,14 +320,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void userLogged(VeloTokenCredentials response) {
-            mProgressDialog.hide();
-            //goes some place here...
-            Intent velociraptor = new Intent(getApplicationContext(), VelociraptorActivity.class);
-            Bundle b = new Bundle();
-            b.putString("sessionToken", response.getId());
-            velociraptor.putExtras(b);
-            startActivity(velociraptor);
-            finish();
+        userService.storeCredentials(response);
+
+        userService.getUserProfile(response, this);
 
     }
 
@@ -327,6 +332,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         RetrofitError error = (RetrofitError) exception;
         mEmailView.setError("An error occured "+error.getResponse().getStatus());
         mEmailView.requestFocus();
+    }
+
+    @Override
+    public void userProfileLoaded(UserProfile profile) {
+        userService.setUser(profile);
+
+        if(mProgressDialog!=null && mProgressDialog.isShowing()){
+            mProgressDialog.hide();
+        }
+
+        Intent velociraptor = new Intent(getApplicationContext(), VelociraptorActivity.class);
+        startActivity(velociraptor);
+        finish();
+
     }
 
 

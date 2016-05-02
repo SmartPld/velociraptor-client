@@ -1,14 +1,18 @@
 package com.pld.velociraptor.view.fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -16,7 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pld.velociraptor.VelociraptorApplication;
-import com.pld.velociraptor.model.Pos;
 import com.pld.velociraptor.model.Station;
 import com.pld.velociraptor.service.JCDecauxService;
 import com.pld.velociraptor.service.StationsLoadedCallBack;
@@ -31,6 +34,7 @@ import javax.inject.Inject;
 public class DisplayStationFragment extends SupportMapFragment implements OnMapReadyCallback, StationsLoadedCallBack, View.OnClickListener, GoogleMap.CancelableCallback {
 
     public static final String TAG = "DisplayStaionFragment";
+    private static final int LOCATION = 0;
 
     @Inject
     JCDecauxService jcDecauxService;
@@ -39,10 +43,11 @@ public class DisplayStationFragment extends SupportMapFragment implements OnMapR
 
     GoogleMap googleMap;
 
+    LatLng userPosition;
 
-    public static DisplayStationFragment newInstance(){
+    public static DisplayStationFragment newInstance() {
 
-        return  new DisplayStationFragment();
+        return new DisplayStationFragment();
     }
 
     @Override
@@ -66,7 +71,7 @@ public class DisplayStationFragment extends SupportMapFragment implements OnMapR
                              Bundle savedInstanceState) {
 
 
-        ((VelociraptorApplication)getActivity().getApplication()).getAppComponent().inject(this);
+        ((VelociraptorApplication) getActivity().getApplication()).getAppComponent().inject(this);
         this.getMapAsync(this);
 
         return super.onCreateView(inflater, container,
@@ -74,9 +79,36 @@ public class DisplayStationFragment extends SupportMapFragment implements OnMapR
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         jcDecauxService.getStations(this);
         this.googleMap = googleMap;
+
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+                GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
+                    @Override
+                    public void onMyLocationChange(Location location) {
+                        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                        userPosition = loc;
+                        googleMap.addMarker(new MarkerOptions().position(loc)
+                                .icon(BitmapDescriptorFactory.defaultMarker(getColor(BitmapDescriptorFactory.HUE_BLUE)))
+                                .title("Votre position")
+                        );
+
+
+
+            }
+        };
 
     }
 
@@ -91,7 +123,7 @@ public class DisplayStationFragment extends SupportMapFragment implements OnMapR
         double lowest_lat=200;
 
         for(Station station : stations){
-            int sum = station.getAvailable_bike_stands() +station.getAvailable_bikes();
+            int sum = station.getAvailable_bike_stands() + station.getAvailable_bikes();
             double availability = 0;
             if(sum >0){
                 availability = station.getAvailable_bikes()/sum;

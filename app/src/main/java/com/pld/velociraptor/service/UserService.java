@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 
+import com.google.gson.Gson;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
@@ -21,6 +22,7 @@ import javax.inject.Singleton;
 @Singleton
 public class UserService {
 
+    private static final String KEY_VELO_CREDENTIALS = "velo_credentials";
     @Inject
     protected RestClient restClient;
 
@@ -29,6 +31,11 @@ public class UserService {
 
     @Inject
     UserServiceApi userServiceApi;
+
+    @Inject
+    Gson gson;
+
+    UserProfile user;
 
     @Inject
     public UserService() {
@@ -111,11 +118,38 @@ public class UserService {
     }
 
     public UserProfile getCurrentUser(){
-        SharedPreferences sharedPref = context.getSharedPreferences("Users",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        return user;
+    }
 
-        return new UserProfile("ded","de",3,5,10,3);
+    public VeloTokenCredentials getCredentials() {
+        SharedPreferences sharedPref = context.getSharedPreferences("Users", Context.MODE_PRIVATE);
+        String json = sharedPref.getString(KEY_VELO_CREDENTIALS, "null");
+
+        if (json.compareTo("null") == 0) {
+            return null;
+        }
+        VeloTokenCredentials veloTokeCredentials = gson.fromJson(json, VeloTokenCredentials.class);
+
+        //TODO check validity
+
+        return veloTokeCredentials;
     }
 
 
+    public  void storeCredentials(VeloTokenCredentials credentials){
+        SharedPreferences sharedPref = context.getSharedPreferences("Users",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        String json = gson.toJson(credentials);
+
+        editor.putString(KEY_VELO_CREDENTIALS, json);
+    }
+
+
+    public void getUserProfile(VeloTokenCredentials credentials, UserProfileLoaded callBack) {
+    }
+
+    public void setUser(UserProfile user) {
+        this.user = user;
+    }
 }
