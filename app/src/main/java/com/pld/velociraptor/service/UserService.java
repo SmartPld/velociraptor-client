@@ -104,7 +104,7 @@ public class UserService {
     }
 
 
-    public  void storeCredentials(VeloTokenCredentials credentials){
+    public void storeCredentials(VeloTokenCredentials credentials){
         SharedPreferences sharedPref = context.getSharedPreferences("Users",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -130,7 +130,15 @@ public class UserService {
 
     }
 
+    /**
+     * Stocks the current user profile locally so all activties can acces it using this userservice entity (provided by DI)
+     * @param user
+     */
     public void setUser(UserProfile user) {
         this.user = user;
+    }
+
+    public void logout(UserProfile user, UserLoggedOutCallBack callBack) {
+        //TODO: tell server token is not valid any more + delete local token
     }
 }

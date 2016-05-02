@@ -48,7 +48,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>,UserLoggedCallBack, UserLoadedCallBack {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, UserLoggedCallBack, UserLoadedCallBack {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
 
     @Inject
-    protected UserService profileInteraction ;
+    protected UserService profileInteraction;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -87,13 +87,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ((VelociraptorApplication)this.getApplication()).getAppComponent().inject(this); //here injection
+        ((VelociraptorApplication) this.getApplication()).getAppComponent().inject(this); //here injection
 
 
         //First, we check the SharedPreferences
         VeloTokenCredentials credentials = userService.getCredentials();
 
-        if(credentials != null){
+        if (credentials != null) {
             userService.getUserProfile(credentials, this);
         }
 
@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * This method is called on button pressed...
-     *
+     * <p/>
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
@@ -215,7 +215,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
 
-        if(!cancel){
+        if (!cancel) {
             mProgressDialog = ProgressDialog.show(this, getString(R.string.wait_please),
                     getString(R.string.connecting), true);
 
@@ -330,7 +330,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void loginError(Exception exception) {
         mProgressDialog.hide();
         RetrofitError error = (RetrofitError) exception;
-        mEmailView.setError("An error occured "+error.getResponse().getStatus());
+        if (error.getResponse() == null)
+            mEmailView.setError("Pas de connexion internet");
+        else
+            mEmailView.setError("Un erreur s'est produit:  " + error.getResponse().getStatus());
         mEmailView.requestFocus();
     }
 
@@ -338,7 +341,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onUserLoaded(UserProfile profile) {
         userService.setUser(profile);
 
-        if(mProgressDialog!=null && mProgressDialog.isShowing()){
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
 
@@ -349,11 +352,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     @Override
-    public void onUserLoadError(Exception exception)
-    {
+    public void onUserLoadError(Exception exception) {
         //TODO: Handle the error...
     }
-
 
 
     private interface ProfileQuery {
