@@ -18,7 +18,7 @@ public class Trip implements Parcelable{
     private  int distance;
     private  int delta_elevation;
     private  int points;
-    private  int ide;
+    private  int id;
 
     public Trip(Station station_start, Station station_end, Date validiteStart, Date validiteEnd, int max_number, int distance, int delta_elevation, int points, int ide) {
         this.station_start = station_start;
@@ -29,7 +29,7 @@ public class Trip implements Parcelable{
         this.distance = distance;
         this.delta_elevation = delta_elevation;
         this.points = points;
-        this.ide = ide;
+        this.id = ide;
     }
 
     protected Trip(Parcel in) {
@@ -39,7 +39,7 @@ public class Trip implements Parcelable{
         distance = in.readInt();
         delta_elevation = in.readInt();
         points = in.readInt();
-        ide = in.readInt();
+        id = in.readInt();
     }
 
     public static final Creator<Trip> CREATOR = new Creator<Trip>() {
@@ -118,12 +118,12 @@ public class Trip implements Parcelable{
         this.points = points;
     }
 
-    public int getIde() {
-        return ide;
+    public int getId() {
+        return id;
     }
 
-    public void setIde(int ide) {
-        this.ide = ide;
+    public void setId(int ide) {
+        this.id = ide;
     }
 
     @Override
@@ -139,6 +139,6 @@ public class Trip implements Parcelable{
         dest.writeInt(distance);
         dest.writeInt(delta_elevation);
         dest.writeInt(points);
-        dest.writeInt(ide);
+        dest.writeInt(id);
     }
 }

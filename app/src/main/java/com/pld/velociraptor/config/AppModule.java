@@ -3,6 +3,7 @@ package com.pld.velociraptor.config;
 import android.content.Context;
 
 import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.Tools;
 
 import java.io.IOException;
@@ -41,4 +42,5 @@ public class AppModule {
     Properties provideProperties() {
         return properties;
     }
+
 }

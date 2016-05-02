@@ -1,7 +1,10 @@
 package com.pld.velociraptor.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +64,7 @@ public class DetailsTripFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,10 +96,14 @@ public class DetailsTripFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        Snackbar snackbar = Snackbar
-                .make(v, R.string.selected_trip, Snackbar.LENGTH_LONG);
 
-        snackbar.show();
+        /**Snackbar snack = Snackbar.make(getView(), "Trajet en cours", Snackbar.LENGTH_LONG);
+        View view = snack.getView();
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)view.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        view.setLayoutParams(params);
+        snack.show();*/
+
 
     }
 }

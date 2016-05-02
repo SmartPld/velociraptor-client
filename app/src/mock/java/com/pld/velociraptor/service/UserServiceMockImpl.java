@@ -1,5 +1,6 @@
 package com.pld.velociraptor.service;
 
+import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.VeloCredentials;
 import com.pld.velociraptor.tools.VeloTokenCredentials;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import retrofit.http.Body;
+import retrofit.http.Path;
 
 /**
  * Created by schieder on 4/26/16.
@@ -49,7 +51,7 @@ public class UserServiceMockImpl implements UserServiceApi {
         }
 
         //creating a mock profile...
-        UserProfile mockProfile = new UserProfile(mockTokens.get(sessionToken), mockTokens.get(sessionToken).split("@")[0], (int)(Math.random()*1000) , (int)(Math.random()*1000), (int)(Math.random()*1000));
+        UserProfile mockProfile = new UserProfile(mockTokens.get(sessionToken), mockTokens.get(sessionToken).split("@")[0], (int)(Math.random()*1000) , (int)(Math.random()*1000), (int)(Math.random()*1000), 1);
         return mockProfile;
     }
 
@@ -81,4 +83,16 @@ public class UserServiceMockImpl implements UserServiceApi {
 
         return new VeloTokenCredentials(token, 3, "",3);
     }
+
+    @Override
+    public Trip acceptTrip(@Path("user") int idUser, @Path("trajet") int idTrip, @Body String dummy) {
+        return null;
+    }
+
+    @Override
+    public UserProfile terminateTrip(@Path("user") int idUser, @Body String dummy) {
+        return null;
+    }
+
+
 }

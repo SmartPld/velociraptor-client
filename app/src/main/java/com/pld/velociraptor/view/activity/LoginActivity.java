@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
+import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.UserLoggedCallBack;
 import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.tools.VeloTokenCredentials;
@@ -52,6 +53,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+
+    UserProfile user;
 
 
     @Inject

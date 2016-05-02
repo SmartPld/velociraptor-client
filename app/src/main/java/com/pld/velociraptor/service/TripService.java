@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 
+import com.pld.velociraptor.model.Trip;
+import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.RestClient;
 import com.pld.velociraptor.tools.VeloFilter;
 
@@ -41,5 +43,7 @@ public class TripService {
             asyncLoader.execute(params);
         }
     }
+
+
 
 }

@@ -3,19 +3,18 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_bikes"
+            android:id="@+id/nav_stations"
             android:icon="@drawable/ic_directions_bike_24dp"
-            android:title="105" />
-
+            android:title="@string/occupation_des_stations" />
         <item
-            android:id="@+id/nav_distance"
-            android:icon="@drawable/ic_timeline_black_24dp"
-            android:title="897 km" />
+            android:id="@+id/nav_trips"
+            android:icon="@drawable/ic_arrow_downward_black_24dp"
+            android:title="@string/trips" />
 
         <item
             android:id="@+id/nav_cash"
-            android:icon="@drawable/ic_star_border_black_24dp"
-            android:title="42,02" />
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/mon_profil" />
     </group>
 
     <item android:title="Compte">
