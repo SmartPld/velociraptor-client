@@ -42,7 +42,6 @@ public class UserService {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void getUserToken(String username, String password, UserLoggedCallBack callback)
     {
-
         LoginUserAsyncTask asyncLoader = new LoginUserAsyncTask(restClient, context, callback);
 
         String[] params = {username, password};
@@ -59,7 +58,8 @@ public class UserService {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void acceptTrip(UserProfile user, Trip trip, TripAcceptedCallBack tripAcceptedCallback){
-        AcceptTripAsyncTask asyncLoader = new AcceptTripAsyncTask(restClient, context, tripAcceptedCallback);
+
+        AcceptTripAsyncTask asyncLoader = new AcceptTripAsyncTask(restClient, this, context, tripAcceptedCallback);
 
         Integer[] params = {user.getId(), trip.getId()};
         int currentapiVersion = Build.VERSION.SDK_INT;
@@ -73,7 +73,8 @@ public class UserService {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void terminateTtrip(UserProfile user, TripTerminatedCallBack callBack) {
-        TerminateTripAsyncTask asyncLoader = new TerminateTripAsyncTask(restClient, context, callBack);
+
+        TerminateTripAsyncTask asyncLoader = new TerminateTripAsyncTask(restClient, this, context, callBack);
 
         UserProfile[] params = {user};
         int currentapiVersion = Build.VERSION.SDK_INT;
@@ -111,6 +112,7 @@ public class UserService {
         String json = gson.toJson(credentials);
 
         editor.putString(KEY_VELO_CREDENTIALS, json);
+        editor.commit();
     }
 
 

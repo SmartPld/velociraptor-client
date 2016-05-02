@@ -19,14 +19,6 @@ import retrofit.http.Query;
 public interface UserServiceApi {
 
     /**
-     * Retrieves a user profile (all profile data unified in an object) from the server using the session key
-     * @param sessionToken
-     * @return
-     */
-    @GET("/user")
-    public UserProfile getUserProfile(@Query("token") String sessionToken);
-
-    /**
      * Tells the server to invalidate the session key
      */
 
@@ -46,12 +38,16 @@ public interface UserServiceApi {
     @POST("/users/{user}/accepttrajet/{trajet}")
     Trip acceptTrip(@Path("user") int idUser,
                     @Path("trajet") int idTrip,
+                    @Query("access_token") String sessionToken,
                     @Body String dummy);
 
     @POST("/users/{user}/validetrajet")
-    UserProfile terminateTrip(@Path("user") int idUser, @Body String dummy);
+    UserProfile terminateTrip(@Path("user") int idUser,
+                              @Query("access_token") String sessionToken,
+                              @Body String dummy);
 
     @GET("/users/{user}")
-    UserProfile getUserProfile(@Path("user") int userId, @Query("access_token") String accessToken);
+    UserProfile getUserProfile(@Path("user") int userId,
+                               @Query("access_token") String accessToken);
 
 }

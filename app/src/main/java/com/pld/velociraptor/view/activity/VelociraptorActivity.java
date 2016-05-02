@@ -158,10 +158,12 @@ public class VelociraptorActivity extends AppCompatActivity
         UserProfile profileToBeDisplayed = userService.getCurrentUser();
         //Customize view according to user profile
         TextView nameView = (TextView) findViewById(R.id.userNameTextView);
+        nameView.setText(userService.getCurrentUser().getUsername());
         nameView.setText(profileToBeDisplayed.getUsername());
 
         TextView mailView = (TextView) findViewById(R.id.userMailTextView);
         mailView.setText(profileToBeDisplayed.getEmail());
+
 
         //TODO: All this code goes into the method that builds the profile fragment
         //update details in slide in menu:
@@ -230,8 +232,9 @@ public class VelociraptorActivity extends AppCompatActivity
             fab.setOnClickListener(stationFragment);
         } else if (id == R.id.nav_disconnect) {
 
-            // logout
+
             userService.logout(userService.getCurrentUser(), this);
+
 
 
         }
@@ -239,6 +242,7 @@ public class VelociraptorActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     @Override
     public void onTripSelected(Trip selectedTrip, View v) {

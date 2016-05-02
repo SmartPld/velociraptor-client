@@ -7,7 +7,9 @@ import android.net.NetworkInfo;
 
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
+import com.pld.velociraptor.service.TripService;
 import com.pld.velociraptor.service.TripServiceApi;
+import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.service.UserServiceApi;
 
 import java.util.List;
@@ -41,6 +43,8 @@ public class RestClient {
     public RestClient() {
     }
 
+
+
     public UserServiceApi getUserService() {
         return userServiceApi;
     }
@@ -59,13 +63,14 @@ public class RestClient {
     /**
      * Gets the user
      *
+     *
+     * @param userId
      * @param sessionToken
      * @return the user
      */
-    public UserProfile getUserProfile(String sessionToken) {
+    public UserProfile getUserProfile(int userId, String sessionToken) {
 
-        UserProfile user = this.userServiceApi.getUserProfile(sessionToken);
-
+        UserProfile user = this.userServiceApi.getUserProfile(userId,sessionToken);
         return user;
     }
 
@@ -73,9 +78,9 @@ public class RestClient {
      * gets the trips
      * @return
      */
-    public List<Trip> getTrips(VeloFilter filter) {
+    public List<Trip> getTrips(VeloFilter filter, String sessionToken) {
 
-        List<Trip> trips = this.tripServiceApi.loadTrips(filter.getLimit(), filter.getMinDistance(), filter.getMaxDistance());
+        List<Trip> trips = this.tripServiceApi.loadTrips(filter.getLimit(), filter.getMinDistance(), filter.getMaxDistance(), sessionToken);
         return trips;
     }
 
@@ -88,11 +93,13 @@ public class RestClient {
         this.userServiceApi.logout(sessionToken);
     }
 
-    public Trip acceptTrip(Integer idUser, Integer idTrip) {
-        return this.userServiceApi.acceptTrip(idUser, idTrip, "");
+    public Trip acceptTrip(Integer idUser, Integer idTrip, String sessionToken) {
+        return this.userServiceApi.acceptTrip(idUser, idTrip, "", sessionToken);
     }
 
-    public UserProfile terminateTrip(UserProfile user) {
-        return this.userServiceApi.terminateTrip(user.getId(), "");
+    public UserProfile terminateTrip(UserProfile user, String sessionToken) {
+        return this.userServiceApi.terminateTrip(user.getId(), "", sessionToken );
     }
+
+
 }

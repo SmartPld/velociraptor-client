@@ -21,11 +21,13 @@ public class TerminateTripAsyncTask extends AsyncTask<UserProfile, Void, UserPro
     private WeakReference<TripTerminatedCallBack> mCallBack;
     private Context context;
     private Exception pendingException;
+    private UserService userService;
 
-    public TerminateTripAsyncTask(RestClient client, Context context, TripTerminatedCallBack callBack) {
+    public TerminateTripAsyncTask(RestClient client, UserService userService, Context context, TripTerminatedCallBack callBack) {
         mCallBack = new WeakReference<>(callBack);
         this.context = context;
         this.client = client;
+        this.userService = userService;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class TerminateTripAsyncTask extends AsyncTask<UserProfile, Void, UserPro
 
         UserProfile result = null;
         try{
-            result = client.terminateTrip(user[0]);
+            result = client.terminateTrip(user[0], userService.getCredentials().getId());
             return result;
         }catch(Exception e){
             pendingException = e;

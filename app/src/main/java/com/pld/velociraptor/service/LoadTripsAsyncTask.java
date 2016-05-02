@@ -11,6 +11,8 @@ import com.pld.velociraptor.tools.VeloFilter;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit.RetrofitError;
 
 /**
@@ -26,11 +28,13 @@ public class LoadTripsAsyncTask extends AsyncTask<VeloFilter, Void, List<Trip>> 
     private WeakReference<TripLoadedCallback> mCallBack;
     private Context context;
     private Exception pendingException;
+    private UserService userService;
 
-    public LoadTripsAsyncTask(RestClient client, Context context, TripLoadedCallback callBack) {
+    public LoadTripsAsyncTask(RestClient client, UserService userService, Context context, TripLoadedCallback callBack) {
         mCallBack = new WeakReference<TripLoadedCallback>(callBack);
         this.context = context;
         this.client = client;
+        this.userService = userService;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class LoadTripsAsyncTask extends AsyncTask<VeloFilter, Void, List<Trip>> 
 
 
         try{
-            result = client.getTrips(filter);
+            result = client.getTrips(filter, userService.getCredentials().getId());
         }catch(RetrofitError error){
             pendingException = error;
 

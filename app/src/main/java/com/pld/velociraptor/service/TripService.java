@@ -26,13 +26,17 @@ public class TripService {
     Context context;
 
     @Inject
+    UserService userService;
+
+    @Inject
     TripService(){
 
     }
 
 
     public void loadTrips(VeloFilter filter, TripLoadedCallback tripLoadedCallback){
-        LoadTripsAsyncTask asyncLoader = new LoadTripsAsyncTask(restClient, context,tripLoadedCallback);
+
+        LoadTripsAsyncTask asyncLoader = new LoadTripsAsyncTask(restClient, userService, context,tripLoadedCallback);
 
         VeloFilter[] params = {filter};
         int currentapiVersion = Build.VERSION.SDK_INT;

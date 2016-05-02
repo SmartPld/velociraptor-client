@@ -46,7 +46,7 @@ public class TripServiceMockImpl implements TripServiceApi {
     }
 
     @Override
-    public List<Trip> loadTrips(Integer limit,  Integer minDist, Integer maxDist) {
+    public List<Trip> loadTrips(@Query("filter[limit]") Integer limit, @Query("filter[where][distance][between][0]") Integer minDist, @Query("filter[where][distance][between][1]") Integer maxDist, @Query("access_token") String sessionToken) {
         List<Trip> result = new ArrayList<>();
         try {
             InputStream is = context.getAssets().open("mock.json");
