@@ -30,6 +30,7 @@ public class UserServiceMockImpl implements UserServiceApi {
 
     @Inject
     public UserServiceMockImpl() {
+        mockUserCredentials.put("admin", "password");
         mockUserCredentials.put("maxou@velociraptor.fr", "42");
         mockUserCredentials.put("thomas@velociraptor.fr", "42");
         mockUserCredentials.put("kilian@velociraptor.fr", "42");

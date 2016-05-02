@@ -38,7 +38,7 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/email"
-                    android:text="maxou@velociraptor.fr"
+                    android:text="admin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
@@ -54,7 +54,7 @@
 
                 <EditText
                     android:id="@+id/password"
-                    android:text="42"
+                    android:text="password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
