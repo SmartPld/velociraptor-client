@@ -49,6 +49,7 @@ public class LoginUserAsyncTask extends AsyncTask<String, Void, VeloTokenCredent
             result = client.loginUser(credentials[0], credentials[1]);
         }catch(Exception e){
             pendingException = e;
+
         }
 
 

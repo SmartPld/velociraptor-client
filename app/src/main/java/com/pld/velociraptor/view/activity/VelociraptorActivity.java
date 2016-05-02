@@ -21,7 +21,6 @@ import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.TripService;
-import com.pld.velociraptor.service.UserLoadedCallBack;
 import com.pld.velociraptor.service.UserLoggedOutCallBack;
 import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.tools.VeloFilter;
@@ -42,12 +41,8 @@ public class VelociraptorActivity extends AppCompatActivity
 
     public final static String KEY_USER = "key_user";
 
-    private String sessionToken;
-
     @BindView(R.id.fab)
     FloatingActionButton fab;
-
-    private boolean researchLaunched = false; //true if a research has already been sent
 
     @Inject
     UserService userService;
@@ -67,14 +62,6 @@ public class VelociraptorActivity extends AppCompatActivity
         ((VelociraptorApplication) this.getApplication()).getAppComponent().inject(this); //here injection
 
         ButterKnife.bind(this);
-
-        //TODO: Use Spinner+AsyncTask to load profile...
-        // this.profile = b.getParcelable(KEY_USER);
-        //userService.loadUserProfile(this, sessionToken);
-
-        // profile = ProfileMockInteraction.getInstance().getUserProfile(sessionToken);
-        //until loaded from remote we display the most recently stocked
-        //profile = new UserProfile("email", "username", 0, 0, 0, 1);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -152,7 +139,6 @@ public class VelociraptorActivity extends AppCompatActivity
 
     }
 
-
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(Gravity.RIGHT)) {
@@ -162,19 +148,24 @@ public class VelociraptorActivity extends AppCompatActivity
         }
     }
 
-    //TODO: Call on async callback once profile has been loaded? -> A discuter demain.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.velociraptor, menu);
 
+        UserProfile profileToBeDisplayed = userService.getCurrentUser();
         //Customize view according to user profile
         TextView nameView = (TextView) findViewById(R.id.userNameTextView);
         nameView.setText(userService.getCurrentUser().getUsername());
+        nameView.setText(profileToBeDisplayed.getUsername());
 
         TextView mailView = (TextView) findViewById(R.id.userMailTextView);
-        mailView.setText(userService.getCurrentUser().getEmail());
+        mailView.setText(profileToBeDisplayed.getEmail());
 
+
+        //TODO: All this code goes into the method that builds the profile fragment
         //update details in slide in menu:
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_left);
         //MenuItem bikeMenuView = (MenuItem) navigationView.getMenu().findItem(R.id.nav_bikes);
@@ -212,8 +203,7 @@ public class VelociraptorActivity extends AppCompatActivity
         if (id == R.id.nav_trips) {
             DisplayTripFragment listFrag = (DisplayTripFragment) getSupportFragmentManager().findFragmentByTag(DisplayTripFragment.TAG);
 
-            if (listFrag == null)
-            {
+            if (listFrag == null) {
                 listFrag = DisplayTripFragment.newInstance();
             }
 
@@ -242,8 +232,9 @@ public class VelociraptorActivity extends AppCompatActivity
             fab.setOnClickListener(stationFragment);
         } else if (id == R.id.nav_disconnect) {
 
-            // logout
-            //userService.logout(sessionToken, this);
+
+            userService.logout(userService.getCurrentUser(), this);
+
 
 
         }
