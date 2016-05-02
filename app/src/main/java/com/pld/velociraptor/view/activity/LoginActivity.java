@@ -31,8 +31,8 @@ import android.widget.TextView;
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.UserProfile;
+import com.pld.velociraptor.service.UserLoadedCallBack;
 import com.pld.velociraptor.service.UserLoggedCallBack;
-import com.pld.velociraptor.service.UserProfileLoaded;
 import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.tools.VeloTokenCredentials;
 
@@ -48,7 +48,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>,UserLoggedCallBack, UserProfileLoaded {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>,UserLoggedCallBack, UserLoadedCallBack {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -335,7 +335,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     @Override
-    public void userProfileLoaded(UserProfile profile) {
+    public void onUserLoaded(UserProfile profile) {
         userService.setUser(profile);
 
         if(mProgressDialog!=null && mProgressDialog.isShowing()){
@@ -347,6 +347,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         finish();
 
     }
+
+    @Override
+    public void onUserLoadError(Exception exception)
+    {
+        //TODO: Handle the error...
+    }
+
 
 
     private interface ProfileQuery {

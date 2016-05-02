@@ -9,6 +9,8 @@ import com.pld.velociraptor.model.UserProfile;
  */
 public interface UserLoadedCallBack {
 
-    void onUserLoaded(UserProfile userProfile);
+    public void onUserLoaded(UserProfile userProfile);
+
+    public void onUserLoadError(Exception exception);
 
 }
