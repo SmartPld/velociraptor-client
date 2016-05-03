@@ -160,4 +160,13 @@ public class UserService {
             asyncLoader.execute(params);
         }
     }
+
+    public void removeCredentials() {
+        SharedPreferences sharedPref = context.getSharedPreferences("Users",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove(KEY_VELO_CREDENTIALS);
+        editor.commit();
+
+
+    }
 }

@@ -167,6 +167,10 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
 
         fab.animate().alpha(0.0f);
 
+        Intent returnIntent = getIntent();
+        setResult(RESULT_OK,returnIntent);
+        finish();
+
         super.onBackPressed();
     }
 
@@ -304,7 +308,6 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
         Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.selected_trip, Snackbar.LENGTH_LONG);
         snackbar.show();
         fab.setImageResource(R.drawable.ic_pin_drop_black_24dp);
-        result.setTrajet(trip);
         userService.setUser(result);
 
     }

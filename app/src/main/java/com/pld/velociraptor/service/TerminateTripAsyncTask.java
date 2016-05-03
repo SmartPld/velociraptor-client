@@ -48,7 +48,6 @@ public class TerminateTripAsyncTask extends AsyncTask<UserProfile, Void, UserPro
         UserProfile result = null;
         try{
             result = client.terminateTrip(user[0], userService.getCredentials().getId());
-            return result;
         }catch(Exception e){
             pendingException = e;
         }

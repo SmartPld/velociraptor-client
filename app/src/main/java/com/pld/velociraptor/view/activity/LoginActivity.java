@@ -351,6 +351,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mProgressDialog.hide();
         }
 
+
+        if(profile == null){
+
+            userService.removeCredentials();
+            setContentView(R.layout.activity_login);
+            return;
+        }
         Intent velociraptor = new Intent(getApplicationContext(), VelociraptorActivity.class);
         startActivity(velociraptor);
         finish();
@@ -359,7 +366,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void onUserLoadError(Exception exception) {
-        //TODO: Handle the error...
+        if(((RetrofitError)exception).getResponse().getStatus() == 401){
+
+            userService.removeCredentials();
+            setContentView(R.layout.activity_login);
+        }
     }
 
 

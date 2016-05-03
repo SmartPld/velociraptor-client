@@ -97,7 +97,7 @@ public class RestClient {
     }
 
     public UserProfile terminateTrip(UserProfile user, String sessionToken) {
-        return this.userServiceApi.terminateTrip(user.getId(), sessionToken, "" );
+        return this.userServiceApi.terminateTrip(user.getId(), sessionToken, "" ).getUtilisateur();
     }
 
 
