@@ -77,7 +77,7 @@ public class RestClient {
      */
     public List<Trip> getTrips(VeloFilter filter, String sessionToken) {
 
-        List<Trip> trips = this.tripServiceApi.loadTrips(filter.getLimit(), filter.getMinDistance(), filter.getMaxDistance(), sessionToken);
+        List<Trip> trips = this.tripServiceApi.loadTrips(filter.getLimit(), filter.getMinDistance(), filter.getMaxDistance(), filter.getMinPrice(), filter.getMaxElevation(), sessionToken);
         return trips;
     }
 
@@ -89,7 +89,7 @@ public class RestClient {
     /**
      * The second paramter is an empty string. We only need it due to an API bug which occurs if we do not pass a second argument (According to thibault)
      * @param sessionToken
-     * @param dummyString
+     * @param
      * @return
      */
     public void logoutUser(String sessionToken) {
