@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -39,7 +39,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     Gson gson;
 
     @BindView(R.id.button_search)
-    Button searchButton;
+    ImageButton searchButton;
 
     @BindView(R.id.prefMinCashChosen)
     DiscreteSeekBar minCashSeekBar;

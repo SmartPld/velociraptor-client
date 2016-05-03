@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <Space
         android:layout_width="fill_parent"
@@ -21,26 +22,26 @@
             android:orientation="vertical"
             android:padding="6dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Points min. : "
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-            <TextView
-                android:id="@+id/minCashChosen"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="1 point"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-        </LinearLayout>
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Points min. : "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                <TextView
+                    android:id="@+id/minCashChosen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="1 point"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            </LinearLayout>
 
             <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                 android:id="@+id/prefMinCashChosen"
@@ -66,69 +67,68 @@
         android:layout_height="10dp" />
 
 
-
-<!--TODO: Enable as soon as Kilian has set up the required REST backend-->
-<!--
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp">
-
-        <LinearLayout
+    <!--TODO: Enable as soon as Kilian has set up the required REST backend-->
+    <!--
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="6dp">
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:orientation="vertical"
+                android:padding="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dist. max départ :"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                    <TextView
+                        android:id="@+id/maxStartDistChosen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="20 km"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                </LinearLayout>
+
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                    android:id="@+id/prefMaxStartDistChosen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_indicatorColor="@color/colorPrimaryDark"
+                    app:dsb_max="20"
+                    app:dsb_min="1"
+                    app:dsb_value="20"
+                    app:dsb_progressColor="@color/colorPrimary"
+                    app:dsb_trackColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dist. max départ :"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                    android:text="Choisissez la distance max au point de départ" />
 
-                <TextView
-                    android:id="@+id/maxStartDistChosen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="20 km"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
             </LinearLayout>
 
+        </android.support.v7.widget.CardView>
 
-            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-                android:id="@+id/prefMaxStartDistChosen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:dsb_indicatorColor="@color/colorPrimaryDark"
-                app:dsb_max="20"
-                app:dsb_min="1"
-                app:dsb_value="20"
-                app:dsb_progressColor="@color/colorPrimary"
-                app:dsb_trackColor="@color/colorPrimaryDark" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Choisissez la distance max au point de départ" />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <Space
-        android:layout_width="fill_parent"
-        android:layout_height="10dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"/>
--->
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"/>
+    -->
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -172,9 +172,9 @@
                 app:dsb_indicatorColor="@color/colorPrimaryDark"
                 app:dsb_max="20"
                 app:dsb_min="1"
-                app:dsb_value="20"
                 app:dsb_progressColor="@color/colorPrimary"
-                app:dsb_trackColor="@color/colorPrimaryDark" />
+                app:dsb_trackColor="@color/colorPrimaryDark"
+                app:dsb_value="20" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -232,9 +232,9 @@
                 app:dsb_indicatorColor="@color/colorPrimaryDark"
                 app:dsb_max="300"
                 app:dsb_min="0"
-                app:dsb_value="300"
                 app:dsb_progressColor="@color/colorPrimary"
-                app:dsb_trackColor="@color/colorPrimaryDark" />
+                app:dsb_trackColor="@color/colorPrimaryDark"
+                app:dsb_value="300" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -246,11 +246,19 @@
 
     </android.support.v7.widget.CardView>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rechercher"
+
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="10dp" />
+
+    <ImageButton
         android:id="@+id/button_search"
-        android:layout_gravity="center_horizontal" />
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/ic_loop_black_24dp"
+        android:scaleType="centerInside" />
 
 </LinearLayout>
