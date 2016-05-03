@@ -3,7 +3,7 @@ package com.pld.velociraptor.tools;
 /**
  * Created by Thibault on 29/04/2016.
  */
-public class VeloTokenCredentials {
+public class VeloTokenCredentials implements Comparable{
     String id;
     int ttl;
     String created;
@@ -46,5 +46,35 @@ public class VeloTokenCredentials {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(o == null)
+        {
+            throw new RuntimeException("Unable to compare element to null object");
+        }
+        if(o.getClass() != this.getClass())
+        {
+            throw new RuntimeException("Unable to compare element to instance of other type");
+        }
+        VeloTokenCredentials otherToken = (VeloTokenCredentials) o;
+        return otherToken.userId - userId;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o == null)
+        {
+            throw new RuntimeException("Unable to compare element to null object");
+        }
+        if(o.getClass() != this.getClass())
+        {
+            throw new RuntimeException("Unable to compare element to instance of other type");
+        }
+        VeloTokenCredentials otherToken = (VeloTokenCredentials) o;
+
+        return otherToken.getId().equals(id);
     }
 }

@@ -54,9 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-
     UserProfile user;
-
 
     @Inject
     UserService userService;
@@ -96,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         if (credentials != null) {
             userService.getUserProfile(credentials, this);
-        }else{
+        } else {
             setContentView(R.layout.activity_login);
 
             // Set up the login form.
@@ -127,7 +125,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mProgressView = findViewById(R.id.login_progress);
 
         }
-
 
 
     }
@@ -225,7 +222,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mProgressDialog = ProgressDialog.show(this, getString(R.string.wait_please),
                     getString(R.string.connecting), true);
 
-            userService.getUserToken(email, password, this);
+            /** Tries to log using the typed credentials.
+            * Internally this call launches an Asynctask. Therefor no reaffection of the result is needed, we only wait for the callback of the userservice.
+            * This is either: userLogged() (everything worked just fine)
+            * or: loginError() (if for whatever reason we could not get an OK from the server)
+            */
+             userService.getUserToken(email, password, this);
         }
 
         if (cancel) {

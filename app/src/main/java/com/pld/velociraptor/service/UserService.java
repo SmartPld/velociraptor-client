@@ -22,12 +22,12 @@ import javax.inject.Singleton;
 public class UserService {
 
     private static final String KEY_VELO_CREDENTIALS = "velo_credentials";
+
     @Inject
     protected RestClient restClient;
 
     @Inject
     protected Context context;
-
 
     @Inject
     Gson gson;

@@ -86,7 +86,12 @@ public class RestClient {
         return this.userServiceApi.login(new VeloCredentials(login, password));
     }
 
-
+    /**
+     * The second paramter is an empty string. We only need it due to an API bug which occurs if we do not pass a second argument (According to thibault)
+     * @param sessionToken
+     * @param dummyString
+     * @return
+     */
     public void logoutUser(String sessionToken) {
         this.userServiceApi.logout(sessionToken, "");
     }
