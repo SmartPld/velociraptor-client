@@ -18,6 +18,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -318,5 +322,54 @@ public class DetailsTripActivity extends BaseActivity implements OnMapReadyCallb
         snackbar.show();
         fab.setImageResource(R.drawable.ic_send_black_24dp);
         userService.setUser(user);
+
+        final TextView mSwitcher = (TextView) findViewById(R.id.animated_text);
+        mSwitcher.setVisibility(View.VISIBLE);
+        mSwitcher.setText("+"+trip.getPoints()+" points");
+
+        final int duration = 1000;
+        final Animation in = new AlphaAnimation(0.0f, 1.0f);
+        in.setDuration(duration);
+        in.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Animation out = new AlphaAnimation(1.0f, 0.0f);
+                out.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mSwitcher.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                out.setDuration(duration);
+                mSwitcher.startAnimation(out);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+
+
+
+                mSwitcher.startAnimation(in);
+
+
     }
 }

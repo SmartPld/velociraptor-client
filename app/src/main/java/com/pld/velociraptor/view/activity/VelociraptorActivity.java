@@ -219,6 +219,8 @@ public class VelociraptorActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, listFrag, DisplayTripFragment.TAG)
                     .commit();
+            
+            fab.show();
             fab.setImageResource(R.drawable.ic_search_black_24px);
             fab.setOnClickListener(this);
         } else if (id == R.id.nav_stations) {
@@ -236,6 +238,7 @@ public class VelociraptorActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, stationFragment, DisplayStationFragment.TAG)
                     .commit();
+            fab.show();
             fab.setImageResource(R.drawable.ic_refresh_black_24dp);
             fab.setOnClickListener(stationFragment);
         } else if (id == R.id.nav_disconnect) {
@@ -260,7 +263,7 @@ public class VelociraptorActivity extends AppCompatActivity
                     .replace(R.id.fragment_container, profileFragment, profileFragment.TAG)
                     .commit();
 
-
+            fab.hide();
         }
 
         drawer.closeDrawer(GravityCompat.START);
