@@ -41,11 +41,29 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     @BindView(R.id.button_search)
     Button searchButton;
 
+    @BindView(R.id.prefMinCashChosen)
+    DiscreteSeekBar minCashSeekBar;
+
+    @BindView(R.id.minCashChosen)
+    TextView minCashTextView;
+
+    @BindView(R.id.prefMaxStartDistChosen)
+    DiscreteSeekBar maxStartDistSeekBar;
+
+    @BindView(R.id.maxStartDistChosen)
+    TextView minStartDistTextView;
+
     @BindView(R.id.prefMaxDistChosen)
     DiscreteSeekBar maxDistanceSeekBar;
 
     @BindView(R.id.maxTripDistChosen)
     TextView maxDistanceTextView;
+
+    @BindView(R.id.prefMaxElevChosen)
+    DiscreteSeekBar maxElevSeekBar;
+
+    @BindView(R.id.maxElevChosen)
+    TextView maxElevTextView;
 
 
     @Override
@@ -86,10 +104,32 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         ButterKnife.bind(this, currentView);
 
         searchButton.setOnClickListener(this);
-        maxDistanceSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+
+        minCashSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                maxDistanceTextView.setText(value + "km");
+                if (value == 1)
+                    minCashTextView.setText(value + " point");
+                else
+                    minCashTextView.setText(value + " points");
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
+
+        maxStartDistSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                minStartDistTextView.setText(value + " km");
+
             }
 
             @Override
@@ -104,6 +144,39 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         });
 
 
+        maxDistanceSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                maxDistanceTextView.setText(value + " km");
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
+
+        maxElevSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                maxElevTextView.setText(value + " m");
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
 
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -133,9 +206,26 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
 
         if (mCallback != null && mCallback.get() != null) {
+
+            // points desired
+            int minPoints = minCashSeekBar.getProgress();
+            filter.setMinPrice(minPoints);
+            filter.setMaxPrice(Integer.MAX_VALUE);
+
+            // max start distance
+            int maxStartDist = maxStartDistSeekBar.getProgress();
+            filter.setMinStartDist(0);
+            filter.setMaxStartDist(maxStartDist);
+
+            // trip distance
             int maxDistance = maxDistanceSeekBar.getProgress();
             filter.setMaxDistance(maxDistance);
             filter.setMinDistance(0);
+
+            // elevation
+            int maxElevation = maxElevSeekBar.getProgress();
+            filter.setMinElevation(Integer.MIN_VALUE);
+            filter.setMaxElevation(maxElevation);
 
             SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
