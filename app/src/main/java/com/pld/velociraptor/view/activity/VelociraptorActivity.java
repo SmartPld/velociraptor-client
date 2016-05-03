@@ -1,5 +1,6 @@
 package com.pld.velociraptor.view.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -42,6 +43,11 @@ public class VelociraptorActivity extends AppCompatActivity
 
     public final static String KEY_USER = "key_user";
     private static final int ACTIVITY_DETAILS = 0;
+
+
+    private ProgressDialog mProgressDialog;
+
+
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -234,6 +240,9 @@ public class VelociraptorActivity extends AppCompatActivity
             fab.setOnClickListener(stationFragment);
         } else if (id == R.id.nav_disconnect) {
 
+
+                     mProgressDialog = ProgressDialog.show(this, getString(R.string.wait_please),
+                    getString(R.string.disconnecting), true);
             userService.logout(userService.getCurrentUser(), this);
 
         }else if(id == R.id.nav_profile){
@@ -288,6 +297,9 @@ public class VelociraptorActivity extends AppCompatActivity
     @Override
     public void userLoggedOut() {
         // redirect to login activity
+
+        mProgressDialog.dismiss();
+        mProgressDialog.cancel();
         Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(loginIntent);
         finish();

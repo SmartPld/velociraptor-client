@@ -31,4 +31,5 @@
     <string name="occupation_des_stations">Occupation des stations</string>
     <string name="trips">Trajets</string>
     <string name="mon_profil">Mon profil</string>
+    <string name="disconnecting">Déconnexion en cours...</string>
 </resources>
