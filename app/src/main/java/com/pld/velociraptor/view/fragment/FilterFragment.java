@@ -47,11 +47,14 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     @BindView(R.id.minCashChosen)
     TextView minCashTextView;
 
+    //TODO: Enable as soon as kilian has set up the REST backend for start-dist thresholds
+    /*
     @BindView(R.id.prefMaxStartDistChosen)
     DiscreteSeekBar maxStartDistSeekBar;
 
     @BindView(R.id.maxStartDistChosen)
     TextView minStartDistTextView;
+    */
 
     @BindView(R.id.prefMaxDistChosen)
     DiscreteSeekBar maxDistanceSeekBar;
@@ -125,6 +128,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             }
         });
 
+        //TODO: Enable as soon as kilian has set up the REST backend for start-dist thresholds
+        /*
         maxStartDistSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
@@ -141,7 +146,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
 
             }
-        });
+        });*/
 
 
         maxDistanceSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
@@ -212,10 +217,13 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             filter.setMinPrice(minPoints);
             filter.setMaxPrice(Integer.MAX_VALUE);
 
+            //TODO: Enable as soon as kilian has set up the REST backend for start-dist thresholds
+            /*
             // max start distance
             int maxStartDist = maxStartDistSeekBar.getProgress();
             filter.setMinStartDist(0);
             filter.setMaxStartDist(maxStartDist);
+            */
 
             // trip distance
             int maxDistance = maxDistanceSeekBar.getProgress();
