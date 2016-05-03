@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Min. Credits: "
+                android:text="Points min. : "
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="42 Points"
+                android:text="1 point"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
         </LinearLayout>
 
@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Choose how many points at least you want to gain" />
+                android:text="Choisissez le minimum de points que vous voulez obtenir" />
 
         </LinearLayout>
 
@@ -90,7 +90,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Max. Start Distance: "
+                    android:text="Dist. max départ :"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <TextView
@@ -98,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:text="5 km"
+                    android:text="20 km"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
             </LinearLayout>
 
@@ -110,14 +110,14 @@
                 app:dsb_indicatorColor="@color/colorPrimaryDark"
                 app:dsb_max="20"
                 app:dsb_min="1"
-
+                app:dsb_value="20"
                 app:dsb_progressColor="@color/colorPrimary"
                 app:dsb_trackColor="@color/colorPrimaryDark" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Choose a max distance for your trip here" />
+                android:text="Choisissez la distance max au point de départ" />
 
         </LinearLayout>
 
@@ -151,7 +151,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Max. Trip Distance: "
+                    android:text="Dist. max trajet :"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <TextView
@@ -159,7 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:text="5 km"
+                    android:text="20 km"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
             </LinearLayout>
 
@@ -171,13 +171,14 @@
                 app:dsb_indicatorColor="@color/colorPrimaryDark"
                 app:dsb_max="20"
                 app:dsb_min="1"
+                app:dsb_value="20"
                 app:dsb_progressColor="@color/colorPrimary"
                 app:dsb_trackColor="@color/colorPrimaryDark" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Choose a max distance from the trip's starting point" />
+                android:text="Choisissez la ditance max. des trajets proposés" />
 
         </LinearLayout>
 
@@ -210,7 +211,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Max. Elevation: "
+                    android:text="Altitude max. : "
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 <TextView
@@ -218,7 +219,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:text="180 m"
+                    android:text="300 m"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
             </LinearLayout>
 
@@ -230,6 +231,7 @@
                 app:dsb_indicatorColor="@color/colorPrimaryDark"
                 app:dsb_max="300"
                 app:dsb_min="0"
+                app:dsb_value="300"
                 app:dsb_progressColor="@color/colorPrimary"
                 app:dsb_trackColor="@color/colorPrimaryDark" />
 
@@ -237,7 +239,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="Choose a max augmentation in altitude" />
+                android:text="Choisissez l'aumentation max de l'altitude" />
 
         </LinearLayout>
 

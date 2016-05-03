@@ -5,10 +5,13 @@ package com.pld.velociraptor.tools;
  */
 public class VeloFilter {
     private Integer limit;
-    private Integer minDistance;
-    private Integer maxDistance;
+
     private Integer minPrice;
     private Integer maxPrice;
+    private Integer minStartDist;
+    private Integer maxStartDist;
+    private Integer minDistance;
+    private Integer maxDistance;
     private Integer minElevation;
     private Integer maxElevation;
 
@@ -76,5 +79,21 @@ public class VeloFilter {
 
     public void setLimit(Integer limit) {
         this.limit = limit;
+    }
+
+    public Integer getMinStartDist() {
+        return minStartDist;
+    }
+
+    public void setMinStartDist(Integer minStartDist) {
+        this.minStartDist = minStartDist;
+    }
+
+    public Integer getMaxStartDist() {
+        return maxStartDist;
+    }
+
+    public void setMaxStartDist(Integer maxStartDist) {
+        this.maxStartDist = maxStartDist;
     }
 }
