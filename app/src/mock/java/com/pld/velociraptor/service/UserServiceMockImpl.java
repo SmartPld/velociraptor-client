@@ -5,8 +5,6 @@ import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.tools.VeloCredentials;
 import com.pld.velociraptor.tools.VeloTokenCredentials;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -23,13 +22,12 @@ import retrofit.http.Query;
 @Singleton
 public class UserServiceMockImpl implements UserServiceApi {
 
-    //mock is implemented as singleton (will become obsulete using DI)
-
     //maps usermails (=ids) to passwords
     private Map<String, String> mockUserCredentials = new LinkedHashMap<>();
 
     @Inject
     public UserServiceMockImpl() {
+        mockUserCredentials.put("admin", "password");
         mockUserCredentials.put("maxou@velociraptor.fr", "42");
         mockUserCredentials.put("thomas@velociraptor.fr", "42");
         mockUserCredentials.put("kilian@velociraptor.fr", "42");
@@ -40,65 +38,44 @@ public class UserServiceMockImpl implements UserServiceApi {
     }
 
     //maps tokens to usermails ( = ids)
-    private Map<String, String> mockTokens = new LinkedHashMap<>();
+    private Map<VeloTokenCredentials, UserProfile> mockVeloTokens = new LinkedHashMap<>();
 
-    @Override
-    public UserProfile getUserProfile(String sessionToken) {
 
-        //return null if the session token is invalid
-        if(!mockTokens.containsKey(sessionToken))
-        {
-            return null;
-        }
-
-        //creating a mock profile...
-        UserProfile mockProfile = new UserProfile(mockTokens.get(sessionToken), mockTokens.get(sessionToken).split("@")[0], (int)(Math.random()*1000) , (int)(Math.random()*1000), (int)(Math.random()*1000), 1);
-        return mockProfile;
+    @GET("/users/{user}")
+    public UserProfile getUserProfile(@Path("user") int userId,
+                               @Query("access_token") String accessToken) {
+        if (mockVeloTokens.get(accessToken).getId() == userId)
+            return mockVeloTokens.get(accessToken);
+        else
+            return null; //the received session token does not correspond to the received user id.
     }
 
     @Override
-    public void logout(String sessionToken) {
-        mockTokens.remove(sessionToken);
+    public void logout(VeloCredentials veloCredentials) {
+        mockVeloTokens.remove(veloCredentials);
     }
 
     @Override
     public VeloTokenCredentials login(@Body VeloCredentials credentials) {
 
-        /**if (usermail.isEmpty()) {
-            return ("ERROR: User must be specified!");
-        } else if (password.isEmpty()) {
-            return ("ERROR: Password must not be empty!");
-        } else if (mockUserCredentials.get(usermail) == null) {
-            return ("ERROR: Invalid user");
-        } else if (!mockUserCredentials.get(usermail).equals(password)) {
-            return ("ERROR: Password incorrect");
-        } else if (mockTokens.containsValue(usermail)) {
-            //TODO: unsure if needed... to discuss with hexanome
-            return ("ERROR: User already connected");
-        }*/
+        //generate an id for the mock Token Credentials
+        String randomId = Integer.toString((int)Math.random()*100);
+        //generate random user id
+        int randomUserId = (int)Math.random()*100;
+        VeloTokenCredentials mockTokenCredentials = new VeloTokenCredentials(randomId, 99999999, "foobar", randomUserId);
+        UserProfile mockProfile = new UserProfile("mockEmail", "mockUserName", 42, 42, 42, 42);
+        mockVeloTokens.put(mockTokenCredentials, mockProfile);
 
-        // login seems to be ok, generate random token and return it:
-        SecureRandom random = new SecureRandom();
-        String token = new BigInteger(130, random).toString(32);
-        mockTokens.put(token, credentials.getUsername());
-
-        return new VeloTokenCredentials(token, 3, "",3);
+        return mockTokenCredentials;
     }
 
     @Override
-    public Trip acceptTrip(@Path("user") int idUser, @Path("trajet") int idTrip, @Body String dummy) {
+    public Trip acceptTrip(@Path("user") int idUser, @Path("trajet") int idTrip, @Query("access_token") String sessionToken, @Body String dummy) {
         return null;
     }
 
     @Override
-    public UserProfile terminateTrip(@Path("user") int idUser, @Body String dummy) {
+    public UserProfile terminateTrip(@Path("user") int idUser, @Query("access_token") String sessionToken, @Body String dummy) {
         return null;
     }
-
-    @Override
-    public UserProfile getUserProfile(@Path("user") int userId, @Query("access_token") String accessToken) {
-        return null;
-    }
-
-
 }

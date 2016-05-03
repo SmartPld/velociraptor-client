@@ -7,6 +7,7 @@
     <FrameLayout
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:backgroundTint="@color/colorPrimary"
         android:background="@drawable/circle"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -16,6 +17,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:id="@+id/imageButton"
+            android:tint="@color/white"
             android:layout_gravity="center"
             android:src="@drawable/ic_directions_bike_black_48dp" />
     </FrameLayout>

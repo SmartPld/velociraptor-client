@@ -28,6 +28,7 @@ import com.pld.velociraptor.view.fragment.DisplayStationFragment;
 import com.pld.velociraptor.view.fragment.DisplayTripFragment;
 import com.pld.velociraptor.view.fragment.FilterFragment;
 import com.pld.velociraptor.view.fragment.OnResearchRequestedListener;
+import com.pld.velociraptor.view.fragment.ProfileFragment;
 
 import javax.inject.Inject;
 
@@ -234,6 +235,22 @@ public class VelociraptorActivity extends AppCompatActivity
         } else if (id == R.id.nav_disconnect) {
 
             userService.logout(userService.getCurrentUser(), this);
+
+        }else if(id == R.id.nav_profile){
+            ProfileFragment profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag(ProfileFragment.TAG);
+
+            if (profileFragment == null)
+
+            {
+                profileFragment = ProfileFragment.newInstance(new Bundle());
+
+
+            }
+            // Add the fragment to the 'fragment_container' FrameLayout replace to avoid reinstancing overlaying fragments
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, profileFragment, profileFragment.TAG)
+                    .commit();
+
 
         }
 

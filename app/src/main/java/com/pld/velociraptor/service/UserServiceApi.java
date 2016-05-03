@@ -19,9 +19,9 @@ import retrofit.http.Query;
  */
 public interface UserServiceApi {
 
+
     /**
-     * @return a String either representing a session token OR an error mesage telling why the received data is not valid;
-     * (Error messages begin by the keyword "ERROR")
+     *
      */
     @POST("/users/login")
     public VeloTokenCredentials login(@Body VeloCredentials credentials);

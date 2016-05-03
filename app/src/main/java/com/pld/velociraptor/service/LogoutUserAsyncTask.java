@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.pld.velociraptor.tools.RestClient;
+import com.pld.velociraptor.tools.VeloCredentials;
 
 import java.lang.ref.WeakReference;
 

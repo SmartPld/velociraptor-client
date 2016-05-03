@@ -8,6 +8,7 @@ import com.pld.velociraptor.view.activity.VelociraptorActivity;
 import com.pld.velociraptor.view.fragment.DisplayStationFragment;
 import com.pld.velociraptor.view.fragment.DisplayTripFragment;
 import com.pld.velociraptor.view.fragment.FilterFragment;
+import com.pld.velociraptor.view.fragment.ProfileFragment;
 
 import javax.inject.Singleton;
 
@@ -31,4 +32,6 @@ public interface AppComponent {
     void inject(FilterFragment filterFragment);
 
     void inject(DisplayStationFragment displayStationFragment);
+
+    void inject(ProfileFragment profileFragment);
 }

@@ -4,12 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-
 import com.pld.velociraptor.model.Trip;
 import com.pld.velociraptor.model.UserProfile;
-import com.pld.velociraptor.service.TripService;
 import com.pld.velociraptor.service.TripServiceApi;
-import com.pld.velociraptor.service.UserService;
 import com.pld.velociraptor.service.UserServiceApi;
 
 import java.util.List;
@@ -88,6 +85,7 @@ public class RestClient {
 
         return this.userServiceApi.login(new VeloCredentials(login, password));
     }
+
 
     public void logoutUser(String sessionToken) {
         this.userServiceApi.logout(sessionToken, "");
