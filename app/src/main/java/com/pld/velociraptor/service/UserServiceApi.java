@@ -32,7 +32,7 @@ public interface UserServiceApi {
                     @Body String dummy);
 
     @POST("/users/{user}/validetrajet")
-    UserProfile terminateTrip(@Path("user") int idUser,
+    UserWrapper terminateTrip(@Path("user") int idUser,
                               @Query("access_token") String sessionToken,
                               @Body String dummy);
 

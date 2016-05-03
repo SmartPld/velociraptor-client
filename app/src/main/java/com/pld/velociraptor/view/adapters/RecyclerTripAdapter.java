@@ -130,7 +130,12 @@ public class RecyclerTripAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return trips.size() + 1 ;
+        int sum = 0;
+        if(headTrip!=null){
+            sum =1;
+        }
+
+        return trips.size() + sum ;
     }
 
     public void remove(int position) {

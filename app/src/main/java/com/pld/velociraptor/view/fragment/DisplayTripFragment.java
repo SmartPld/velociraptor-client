@@ -44,6 +44,7 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     private List<Trip> trips = new ArrayList<>(); //the forecasts list
     private RecyclerTripAdapter tripAdapter; //the adapter for the listView
     private VeloFilter filter;
+    private Trip head;
 
     @Inject
     protected TripService tripService;
@@ -75,11 +76,11 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     @Override
     public void onTripsLoaded(List<Trip> tripsLoaded) {
         trips.clear();
+        head = null;
         trips.addAll(tripsLoaded);
 
 
         List<Trip> displayedTrips = trips;
-        Trip head = null;
 
         if(userService.getCurrentUser().getTrajet() != null){
 
@@ -219,6 +220,34 @@ public class DisplayTripFragment extends BaseFragment implements AdapterView.OnI
     }
 
     public void refresh() {
+
+        if(head != null){
+            trips.add(head);
+        }
+        head = null;
+        if(userService.getCurrentUser().getTrajet() != null){
+
+            int i = 0;
+            boolean found = false;
+
+            while(!found && i<trips.size()){
+
+                if(userService.getCurrentUser().getTrajet().equals(trips.get(i))){
+                    head = trips.get(i);
+                    trips.remove(i);
+                    found = true;
+
+                }
+
+                i++;
+            }
+
+        }
+
+        tripAdapter = new RecyclerTripAdapter(getActivity(), trips, head, this);
+        listForecasts.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listForecasts.setAdapter(tripAdapter);
+        tripAdapter.notifyDataSetChanged();
     }
 
     // Container Activity must implement this interface

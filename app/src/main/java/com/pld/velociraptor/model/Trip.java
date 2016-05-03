@@ -14,8 +14,6 @@ public class Trip implements Parcelable{
 
     private Station station_start;
     private Station station_end;
-    @SerializedName("validite_start")
-    private  Date validiteStart;
     @SerializedName("validite_end")
     private  Date validiteEnd;
     private  int max_number;
@@ -24,10 +22,9 @@ public class Trip implements Parcelable{
     private  int points;
     private  int id;
 
-    public Trip(Station station_start, Station station_end, Date validiteStart, Date validiteEnd, int max_number, int distance, int delta_elevation, int points, int ide) {
+    public Trip(Station station_start, Station station_end, Date validiteEnd, int max_number, int distance, int delta_elevation, int points, int ide) {
         this.station_start = station_start;
         this.station_end = station_end;
-        this.validiteStart = validiteStart;
         this.validiteEnd = validiteEnd;
         this.max_number = max_number;
         this.distance = distance;
@@ -44,7 +41,6 @@ public class Trip implements Parcelable{
         delta_elevation = in.readInt();
         points = in.readInt();
         id = in.readInt();
-        validiteStart = new Date(in.readLong());
         validiteEnd = new Date(in.readLong());
     }
 
@@ -80,13 +76,6 @@ public class Trip implements Parcelable{
         this.station_end = station_end;
     }
 
-    public Date getValiditeStart() {
-        return validiteStart;
-    }
-
-    public void setValiditeStart(Date validiteStart) {
-        this.validiteStart = validiteStart;
-    }
 
     public Date getValiditeEnd() {
         return validiteEnd;
@@ -151,7 +140,6 @@ public class Trip implements Parcelable{
         dest.writeInt(delta_elevation);
         dest.writeInt(points);
         dest.writeInt(id);
-        dest.writeLong(validiteStart.getTime());
         dest.writeLong(validiteEnd.getTime());
     }
 }
