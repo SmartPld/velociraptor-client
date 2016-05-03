@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.pld.velociraptor.R;
 import com.pld.velociraptor.VelociraptorApplication;
 import com.pld.velociraptor.model.Trip;
+import com.pld.velociraptor.model.UserProfile;
 import com.pld.velociraptor.service.UserService;
 
 import org.w3c.dom.Text;
@@ -36,6 +37,16 @@ public class ProfileFragment extends BaseFragment {
 
     @Inject
     UserService userService;
+
+
+    @BindView(R.id.username)
+    TextView usernameTextView;
+
+    @BindView(R.id.email)
+    TextView emailTextView;
+
+    @BindView(R.id.points)
+    TextView pointsTextView;
 
 
     public static ProfileFragment newInstance(Bundle bundleArg){
@@ -61,6 +72,12 @@ public class ProfileFragment extends BaseFragment {
         ((VelociraptorApplication)getActivity().getApplication()).getAppComponent().inject(this);
 
         ButterKnife.bind(this, v);
+
+        UserProfile userProfile = userService.getCurrentUser();
+
+        pointsTextView.setText(""+userProfile.getPoints());
+        usernameTextView.setText(userProfile.getUsername());
+        emailTextView.setText(userProfile.getEmail());
 
 
         return v;

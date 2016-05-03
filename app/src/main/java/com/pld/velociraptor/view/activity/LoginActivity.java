@@ -336,7 +336,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     @Override
     public void loginError(Exception exception) {
-        mProgressDialog.hide();
+        mProgressDialog.dismiss();
         RetrofitError error = (RetrofitError) exception;
         if (error.getResponse() == null)
             mEmailView.setError("Pas de connexion internet");
